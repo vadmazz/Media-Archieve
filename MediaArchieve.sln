@@ -3,11 +3,16 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29418.71
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MediaArchieve.Server", "MediaArchieve.Server\MediaArchieve.Server.csproj", "{DF2710C4-AE1E-4A08-BDB3-4E15A28C5B72}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MediaArchieve.Client", "MediaArchieve.Client\MediaArchieve.Client.csproj", "{DFB7F121-8B24-4FA2-B24D-95D612D0812F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MediaArchieve.Client", "MediaArchieve.Client\MediaArchieve.Client.csproj", "{DFB7F121-8B24-4FA2-B24D-95D612D0812F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MediaArchieve.Shared", "MediaArchieve.Shared\MediaArchieve.Shared.csproj", "{8688C62F-CC51-4D4D-AD7E-3F6BDE4D1625}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MediaArchieve.Shared", "MediaArchieve.Shared\MediaArchieve.Shared.csproj", "{8688C62F-CC51-4D4D-AD7E-3F6BDE4D1625}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MediaArchieve.Server", "MediaArchieve.Server\MediaArchieve.Server.csproj", "{D74F457C-DC49-445C-9809-D06D8B9B7F46}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{D4C1E6EB-BB30-450B-B24D-2834B5567C45}"
+	ProjectSection(SolutionItems) = preProject
+		..\..\..\Downloads\doc.png = ..\..\..\Downloads\doc.png
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,10 +20,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{DF2710C4-AE1E-4A08-BDB3-4E15A28C5B72}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{DF2710C4-AE1E-4A08-BDB3-4E15A28C5B72}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{DF2710C4-AE1E-4A08-BDB3-4E15A28C5B72}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{DF2710C4-AE1E-4A08-BDB3-4E15A28C5B72}.Release|Any CPU.Build.0 = Release|Any CPU
 		{DFB7F121-8B24-4FA2-B24D-95D612D0812F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{DFB7F121-8B24-4FA2-B24D-95D612D0812F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DFB7F121-8B24-4FA2-B24D-95D612D0812F}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -27,6 +28,10 @@ Global
 		{8688C62F-CC51-4D4D-AD7E-3F6BDE4D1625}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8688C62F-CC51-4D4D-AD7E-3F6BDE4D1625}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8688C62F-CC51-4D4D-AD7E-3F6BDE4D1625}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D74F457C-DC49-445C-9809-D06D8B9B7F46}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D74F457C-DC49-445C-9809-D06D8B9B7F46}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D74F457C-DC49-445C-9809-D06D8B9B7F46}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D74F457C-DC49-445C-9809-D06D8B9B7F46}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

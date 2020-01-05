@@ -1,13 +1,9 @@
-﻿using System;
+﻿using MediaArchieve.Server.Models;
+using MediaArchieve.Shared;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.Http;
-using System.Net;
-using System.Threading.Tasks;
-using MediaArchieve.Server.Models;
-using MediaArchieve.Shared;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 
 namespace MediaArchieve.Server.Controllers
 {
@@ -20,40 +16,93 @@ namespace MediaArchieve.Server.Controllers
         {
             _context = db;
         }
+
         /// <summary>
-        ///GET:
+        /// GET
         /// Возвращает все элементы Folder
         /// url: .../api/folders/
         /// </summary>
-        /// <returns></returns>
         [HttpGet]
         public ActionResult<IEnumerable<Folder>> Get()
         {
-            return _context.Folders;
+            return _context.Folders.Include(x => x.Items).ThenInclude(x => x.Preview).ToList();
         }
 
         /// <summary>
-        /// GET:
+        /// GET
         /// Возвращает Folder из базы данных с указанным id
         /// url: .../api/folders/id
         /// </summary>
-        /// <returns></returns>
         [HttpGet("{id}")]
         public ActionResult<Folder> GetById(int id)
         {
-            var folder = _context.Folders.Find(id);
+
+            var folder = _context.Folders
+                .Include(x => x.Items)
+                .ThenInclude(x => x.Preview)
+                .FirstOrDefault(f => f.Id == id);                
+
             if (folder == null)
                 return NotFound();
+           
             return folder;
         }
 
+        /// <summary>
+        /// POST
+        /// Добавляет в базу данных Folder 
+        /// url: .../api/folders/
+        /// </summary>
         [HttpPost]
-        public HttpResponseMessage Post(Folder fo)
+        public ActionResult<Folder> Post(Folder fo)
         {
-            var length = _context.Folders.ToArray().Length;
+            if (fo == null)
+                return BadRequest();
             _context.Folders.Add(fo);
             _context.SaveChanges();
-            return new HttpResponseMessage(HttpStatusCode.OK);
+            return Ok();
+        }
+
+        /// <summary>
+        /// PUT
+        /// Заменяет Folder
+        /// url: .../api/folders/id
+        /// </summary>
+        [HttpPut("{id}")]
+        public ActionResult Put(int id, Folder folder)
+        {
+            if (id != folder.Id)
+                return BadRequest();            
+            var folderAim = _context.Folders
+                .Include(x => x.Items)
+                .ThenInclude(x => x.Preview)
+                .FirstOrDefault(f => f.Id == id);
+            folderAim.Update(folder);
+            _context.SaveChanges();
+
+            return NoContent();
+        }
+
+        /// <summary>
+        /// DELETE
+        /// Удаляет Folder
+        /// url: .../api/folders/id
+        /// </summary>
+        [HttpDelete("{id}")]
+        public ActionResult<Folder> Delete(int id)
+        {
+            var deletedFolder = _context.Folders
+                .Include(x => x.Items)
+                .ThenInclude(p => p.Preview)
+                .FirstOrDefault(f => f.Id == id);
+
+            if (deletedFolder == null)
+                return NotFound();
+            _context.Entry(deletedFolder).State = EntityState.Deleted;
+            _context.Folders.Remove(deletedFolder);
+            _context.SaveChanges();
+
+            return deletedFolder;
         }
     }
 }

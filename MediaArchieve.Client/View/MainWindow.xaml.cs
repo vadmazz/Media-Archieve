@@ -1,6 +1,9 @@
-﻿using System;
+﻿using MediaArchieve.Shared.Items;
+using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -22,7 +25,20 @@ namespace MediaArchieve.Client.View
     {
         public MainWindow()
         {
-            InitializeComponent();
+            InitializeComponent();            
         }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            Met();
+        }
+        private async void Met()
+        {
+            using (HttpClient client = new HttpClient())
+            {
+                var resp = await client.GetAsync("https://localhost:44392/api/items/4/12");
+                var responseStr = await resp.Content.ReadAsStringAsync();
+            }   
+        } 
     }
 }

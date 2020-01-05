@@ -2,7 +2,7 @@
 
 namespace MediaArchieve.Server.Migrations
 {
-    public partial class Init : Migration
+    public partial class mig1 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -20,19 +20,6 @@ namespace MediaArchieve.Server.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Preview",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Content = table.Column<string>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Preview", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Item",
                 columns: table => new
                 {
@@ -41,8 +28,7 @@ namespace MediaArchieve.Server.Migrations
                     IconSource = table.Column<string>(nullable: true),
                     Name = table.Column<string>(nullable: true),
                     Description = table.Column<string>(nullable: true),
-                    PreviewId = table.Column<int>(nullable: true),
-                    FolderId = table.Column<int>(nullable: true)
+                    FolderId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -52,13 +38,27 @@ namespace MediaArchieve.Server.Migrations
                         column: x => x.FolderId,
                         principalTable: "Folders",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Preview",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Content = table.Column<string>(nullable: true),
+                    ItemId = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Preview", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Item_Preview_PreviewId",
-                        column: x => x.PreviewId,
-                        principalTable: "Preview",
+                        name: "FK_Preview_Item_ItemId",
+                        column: x => x.ItemId,
+                        principalTable: "Item",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
@@ -67,21 +67,22 @@ namespace MediaArchieve.Server.Migrations
                 column: "FolderId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Item_PreviewId",
-                table: "Item",
-                column: "PreviewId");
+                name: "IX_Preview_ItemId",
+                table: "Preview",
+                column: "ItemId",
+                unique: true);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
+                name: "Preview");
+
+            migrationBuilder.DropTable(
                 name: "Item");
 
             migrationBuilder.DropTable(
                 name: "Folders");
-
-            migrationBuilder.DropTable(
-                name: "Preview");
         }
     }
 }
