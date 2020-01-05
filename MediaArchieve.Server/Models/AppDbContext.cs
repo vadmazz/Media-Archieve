@@ -14,20 +14,13 @@ namespace MediaArchieve.Server.Models
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            //modelBuilder.Entity<Folder>()
-            //    .HasMany(x => x.Items)
-            //    .WithOne(x => x.Folder)
-            //    .HasForeignKey(x => x.FolderId);
-            ////modelBuilder.Entity<Item>()
-            ////    .OwnsOne(c => c.Preview);
-            //modelBuilder
-            //.Entity<Item>()
-            //.HasOne(u => u.Preview)
-            //.WithOne(p => p.Item)
-            //.HasForeignKey<Preview>(p => p.ItemId);
         }
 
         public DbSet<Folder> Folders { get; set; }
-        public DbSet<Document> Document { get; set; }
+        public DbSet<Document> Documents { get; set; }
+        public DbSet<Film> Films { get; set; }
+        public DbSet<Audio> Audios { get; set; }
+        public DbSet<Clip> Clips { get; set; }
+        public DbSet<Photo> Photos { get; set; }
     }
 }

@@ -1,20 +1,8 @@
-﻿using MediaArchieve.Shared.Items;
-using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using Newtonsoft.Json;
 using System.Net.Http;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+using MediaArchieve.Shared;
+using MediaArchieve.Shared.Items;
 
 namespace MediaArchieve.Client.View
 {
@@ -34,11 +22,28 @@ namespace MediaArchieve.Client.View
         }
         private async void Met()
         {
-            using (HttpClient client = new HttpClient())
-            {
-                var resp = await client.GetAsync("https://localhost:44392/api/items/4/12");
-                var responseStr = await resp.Content.ReadAsStringAsync();
-            }   
-        } 
+            var client = new HttpClient();
+            var response = await client.GetAsync(Text.Text);
+            var responseStr = await response.Content.ReadAsStringAsync();
+            var item = JsonConvert.DeserializeObject(responseStr,new JsonSerializerSettings{TypeNameHandling = TypeNameHandling.All});
+
+            MessageBox.Show("sda");
+        }
+
+        private async void Post()
+        {
+            var client = new HttpClient();
+            var c = new Clip();
+            var obj = JsonConvert.SerializeObject(c,
+                new JsonSerializerSettings {TypeNameHandling = TypeNameHandling.All});
+            HttpContent cont = new StringContent(obj);
+            var req = await client.PostAsync(Text.Text,cont);
+            MessageBox.Show(req.ToString());
+        }
+        private void Button1_OnClick(object sender, RoutedEventArgs e)
+        {
+            Post();
+        }
     }
 }
+ 

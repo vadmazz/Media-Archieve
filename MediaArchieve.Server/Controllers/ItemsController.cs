@@ -25,28 +25,27 @@ namespace MediaArchieve.Server.Controllers
         /// Добавляет в базу данных Item 
         /// url: .../api/folderId/itemId
         /// </summary>
-        [HttpPost("{id}")]
-        public ActionResult<Item> PostDocument(int id, Document doc)
+        [HttpPost("{folderId}")]
+        public ActionResult<Item> PostItem(int folderId, Item item)
         {
-            if (doc == null)
-                return BadRequest();
-
             var folder = _context.Folders
                 .Include(x => x.Items)
-                .ThenInclude(x => x.Preview)
-                .FirstOrDefault(f => f.Id == id);
-            folder.Items.Add(doc);
+                .FirstOrDefault(f => f.Id == folderId);
+            if (item == null || folder == null)
+                return BadRequest();
+            folder.Items.Add(item);
             
             _context.SaveChanges();
             return Ok();
         }
         [HttpGet("{id}")]
-        public ActionResult<IEnumerable<Item>> Get(int id)
+        public ActionResult<IEnumerable<Item>> GetAll(int id)
         {
             var folder = _context.Folders
                 .Include(x => x.Items)
-                .ThenInclude(x => x.Preview)
                 .FirstOrDefault(f => f.Id == id);
+            if (folder == null)
+                return NotFound();
             return folder.Items.ToList();
         }
 
@@ -55,15 +54,11 @@ namespace MediaArchieve.Server.Controllers
         {
             var folder = _context.Folders
                 .Include(x => x.Items)
-                .ThenInclude(x => x.Preview)
                 .FirstOrDefault(f => f.Id == folderId);
-
             var item = folder.Items
                 .FirstOrDefault(x => x.Id == itemId);
-
             if (folder == null || item == null)
                 return NotFound();
-
             return item;
         }
     }

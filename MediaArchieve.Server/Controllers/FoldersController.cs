@@ -25,7 +25,7 @@ namespace MediaArchieve.Server.Controllers
         [HttpGet]
         public ActionResult<IEnumerable<Folder>> Get()
         {
-            return _context.Folders.Include(x => x.Items).ThenInclude(x => x.Preview).ToList();
+            return _context.Folders.Include(x => x.Items).ToList();
         }
 
         /// <summary>
@@ -39,7 +39,6 @@ namespace MediaArchieve.Server.Controllers
 
             var folder = _context.Folders
                 .Include(x => x.Items)
-                .ThenInclude(x => x.Preview)
                 .FirstOrDefault(f => f.Id == id);                
 
             if (folder == null)
@@ -75,7 +74,6 @@ namespace MediaArchieve.Server.Controllers
                 return BadRequest();            
             var folderAim = _context.Folders
                 .Include(x => x.Items)
-                .ThenInclude(x => x.Preview)
                 .FirstOrDefault(f => f.Id == id);
             folderAim.Update(folder);
             _context.SaveChanges();
@@ -93,7 +91,6 @@ namespace MediaArchieve.Server.Controllers
         {
             var deletedFolder = _context.Folders
                 .Include(x => x.Items)
-                .ThenInclude(p => p.Preview)
                 .FirstOrDefault(f => f.Id == id);
 
             if (deletedFolder == null)
