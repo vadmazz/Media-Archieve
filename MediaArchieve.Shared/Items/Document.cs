@@ -9,5 +9,11 @@
         {
             IconSource = "C:\\Users\\vadim\\Downloads\\doc.png";
         }
+
+        public Document(string name, string description) 
+            : base(name, description)
+        {
+            IconSource = "C:\\Users\\vadim\\Downloads\\doc.png";
+        }
     }
 }

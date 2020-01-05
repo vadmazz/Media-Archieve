@@ -23,7 +23,7 @@ namespace MediaArchieve.Server.Controllers
         /// <summary>
         /// POST
         /// Добавляет в базу данных Item 
-        /// url: .../api/folderId/itemId
+        /// url: .../api/items/folderId/
         /// </summary>
         [HttpPost("{folderId}")]
         public ActionResult<Item> PostItem(int folderId, Item item)
@@ -34,10 +34,15 @@ namespace MediaArchieve.Server.Controllers
             if (item == null || folder == null)
                 return BadRequest();
             folder.Items.Add(item);
-            
             _context.SaveChanges();
+            
             return Ok();
         }
+        /// <summary>
+        /// GET
+        /// Получает все Items из папки с folderId
+        /// url: .../api/items/folderId/
+        /// </summary>
         [HttpGet("{id}")]
         public ActionResult<IEnumerable<Item>> GetAll(int id)
         {
@@ -46,9 +51,15 @@ namespace MediaArchieve.Server.Controllers
                 .FirstOrDefault(f => f.Id == id);
             if (folder == null)
                 return NotFound();
+            
             return folder.Items.ToList();
         }
-
+        
+        /// <summary>
+        /// GET
+        /// Получает Item по Id 
+        /// url: .../api/items/folderId/itemId
+        /// </summary>
         [HttpGet("{folderId}/{itemId}")]
         public ActionResult<Item> GetById(int folderId, int itemId)
         {
@@ -59,7 +70,52 @@ namespace MediaArchieve.Server.Controllers
                 .FirstOrDefault(x => x.Id == itemId);
             if (folder == null || item == null)
                 return NotFound();
+            
             return item;
+        }
+        
+        /// <summary>
+        /// PUT
+        /// Заменяет Item
+        /// url: .../api/items/folderId/ItemId
+        /// </summary>
+        [HttpPut("{folderId}/{itemId}")]
+        public ActionResult Put(int folderId, int itemId, Item item)
+        {
+            var targetItem = _context.Folders
+                .Include(x => x.Items)
+                .FirstOrDefault(f => f.Id == folderId)
+                ?.Items
+                .FirstOrDefault(i => i.Id == itemId);
+            if (targetItem == null)
+                return NotFound();
+            targetItem.Update(item);
+            _context.SaveChanges();
+
+            return NoContent();
+        }
+
+        /// <summary>
+        /// DELETE
+        /// Удаляет Item
+        /// url: .../api/items/folderId/itemId
+        /// </summary>
+        [HttpDelete("{folderId}/{itemId}")]
+        public ActionResult<Item> Delete(int folderId, int itemId)
+        {
+            var deletedFolder = _context.Folders
+                .Include(x => x.Items)
+                .FirstOrDefault(f => f.Id == folderId);
+            var deletedItem = deletedFolder.Items
+                .FirstOrDefault(i => i.Id == itemId);
+            if (deletedFolder == null || deletedItem == null)
+                return NotFound();
+            
+            _context.Entry(deletedItem).State = EntityState.Deleted;
+            deletedFolder.Items.Remove(deletedItem);
+            _context.SaveChanges();
+
+            return deletedItem;
         }
     }
 }

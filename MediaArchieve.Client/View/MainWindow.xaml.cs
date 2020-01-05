@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using System.Net.Http;
+using System.Text;
 using System.Windows;
 using MediaArchieve.Shared;
 using MediaArchieve.Shared.Items;
@@ -36,8 +37,8 @@ namespace MediaArchieve.Client.View
             var c = new Clip();
             var obj = JsonConvert.SerializeObject(c,
                 new JsonSerializerSettings {TypeNameHandling = TypeNameHandling.All});
-            HttpContent cont = new StringContent(obj);
-            var req = await client.PostAsync(Text.Text,cont);
+            var cont = new StringContent(obj, Encoding.UTF8, "application/json");
+            var req = await client.PostAsync(Text.Text, cont);
             MessageBox.Show(req.ToString());
         }
         private void Button1_OnClick(object sender, RoutedEventArgs e)

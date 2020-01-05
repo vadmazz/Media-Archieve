@@ -36,11 +36,9 @@ namespace MediaArchieve.Server.Controllers
         [HttpGet("{id}")]
         public ActionResult<Folder> GetById(int id)
         {
-
             var folder = _context.Folders
                 .Include(x => x.Items)
-                .FirstOrDefault(f => f.Id == id);                
-
+                .FirstOrDefault(f => f.Id == id);
             if (folder == null)
                 return NotFound();
            
@@ -59,6 +57,7 @@ namespace MediaArchieve.Server.Controllers
                 return BadRequest();
             _context.Folders.Add(fo);
             _context.SaveChanges();
+            
             return Ok();
         }
 
@@ -70,12 +69,12 @@ namespace MediaArchieve.Server.Controllers
         [HttpPut("{id}")]
         public ActionResult Put(int id, Folder folder)
         {
-            if (id != folder.Id)
-                return BadRequest();            
-            var folderAim = _context.Folders
+            var targetFolder = _context.Folders
                 .Include(x => x.Items)
                 .FirstOrDefault(f => f.Id == id);
-            folderAim.Update(folder);
+            if (targetFolder == null)
+                return NotFound();
+            targetFolder.Update(folder);
             _context.SaveChanges();
 
             return NoContent();
@@ -92,7 +91,6 @@ namespace MediaArchieve.Server.Controllers
             var deletedFolder = _context.Folders
                 .Include(x => x.Items)
                 .FirstOrDefault(f => f.Id == id);
-
             if (deletedFolder == null)
                 return NotFound();
             _context.Entry(deletedFolder).State = EntityState.Deleted;
