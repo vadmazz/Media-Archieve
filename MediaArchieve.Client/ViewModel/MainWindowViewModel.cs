@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Markup;
 using MediaArchieve.Client.Helpers;
 using MediaArchieve.Client.Model.ServerSide;
 using MediaArchieve.Shared;
@@ -16,13 +11,20 @@ namespace MediaArchieve.Client.ViewModel
     public class MainWindowViewModel : BaseModel
     {
         public ObservableCollection<Folder> Folders { get; set; }
+        public ObservableCollection<Folder> EditingFolder { get; set; } 
+        public ICommand EditFolderCommand { get; set; } 
 
+        private void EditFolder(object obj)
+        {
+            EditingFolder = new ObservableCollection<Folder>();
+            EditingFolder.Add(Folders.FirstOrDefault());
+            OnPropertyChanged("EditFolderName");
+        }
 
         public MainWindowViewModel()
         {
-
+            EditFolderCommand = new RelayCommand(EditFolder);
         }
-
         public async Task GetFolderCollection()
         {
             FoldersService foldersService = new FoldersService();
@@ -30,6 +32,7 @@ namespace MediaArchieve.Client.ViewModel
             Folders = new ObservableCollection<Folder>(collection);
             OnPropertyChanged("Folders");
         }
+        
         
     }
 }

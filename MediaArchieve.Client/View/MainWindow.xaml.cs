@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using MaterialDesignThemes.Wpf;
 using MediaArchieve.Client.ViewModel;
 using MediaArchieve.Client.Helpers;
 
@@ -20,6 +21,11 @@ namespace MediaArchieve.Client.View
         private void ButtonPower_Click(object sender, RoutedEventArgs e)
         {
             Application.Current.Shutdown();
+        }
+
+        private void Sample5_DialogHost_OnDialogClosing(object sender, DialogClosingEventArgs eventargs)
+        {
+            throw new System.NotImplementedException();
         }
     }
 }
