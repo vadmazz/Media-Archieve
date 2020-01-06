@@ -66,9 +66,11 @@ namespace MediaArchieve.Server.Controllers
             var folder = _context.Folders
                 .Include(x => x.Items)
                 .FirstOrDefault(f => f.Id == folderId);
+            if (folder == null)
+                return NotFound();
             var item = folder.Items
                 .FirstOrDefault(x => x.Id == itemId);
-            if (folder == null || item == null)
+            if (item == null)
                 return NotFound();
             
             return item;
@@ -106,9 +108,11 @@ namespace MediaArchieve.Server.Controllers
             var deletedFolder = _context.Folders
                 .Include(x => x.Items)
                 .FirstOrDefault(f => f.Id == folderId);
+            if (deletedFolder == null)
+                return NotFound();
             var deletedItem = deletedFolder.Items
                 .FirstOrDefault(i => i.Id == itemId);
-            if (deletedFolder == null || deletedItem == null)
+            if (deletedItem == null)
                 return NotFound();
             
             _context.Entry(deletedItem).State = EntityState.Deleted;
