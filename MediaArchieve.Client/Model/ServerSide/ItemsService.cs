@@ -6,7 +6,7 @@ using Newtonsoft.Json;
 
 namespace MediaArchieve.Client.Model.ServerSide
 {
-    public class ItemsService : ArchieveService
+    public class ItemsService : ArchieveClient
     {
         /// <summary>
         /// Возвращает true or false в зависимости от того создался ли источник

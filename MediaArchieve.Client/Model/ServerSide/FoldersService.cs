@@ -8,16 +8,18 @@ using Newtonsoft.Json;
 
 namespace MediaArchieve.Client.Model.ServerSide
 {
-    public class FoldersService : ArchieveService
+    public class FoldersService
     {
+        private ArchieveClient _client = new ArchieveClient();
         /// <summary>
+        /// Создает папку на сервере
         /// Возвращает true or false в зависимости от успешности выполнения
         /// </summary>
         public async Task<bool> CreateFolder(Folder folder)
         {
             var folderJson = JsonConvert.SerializeObject(folder,
                 new JsonSerializerSettings {TypeNameHandling = TypeNameHandling.All});
-            var response = await Post(folderJson, ServerSettings.FolderUrl);
+            var response = await _client.Post(folderJson, ServerSettings.FolderUrl);
             
             return response.IsSuccessStatusCode;
         }
@@ -27,7 +29,7 @@ namespace MediaArchieve.Client.Model.ServerSide
         /// </summary>
         public async Task<IEnumerable<Folder>> GetAllFolders()
         {
-            var response = await Get(ServerSettings.FolderUrl);
+            var response = await _client.Get(ServerSettings.FolderUrl);
             if (!response.IsSuccessStatusCode)
                 throw new HttpRequestException();
             var folderJson = await response.Content.ReadAsStringAsync();

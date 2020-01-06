@@ -3,7 +3,7 @@
     public static class ServerSettings
     {
         public static string Url => "https://localhost:44392/api/";
-        public static string FolderUrl => Url+"/folders/";
-        public static string ItemUrl => Url+"/items/";
+        public static string FolderUrl => Url+"folders/";
+        public static string ItemUrl => Url+"items/";
     }
 }
