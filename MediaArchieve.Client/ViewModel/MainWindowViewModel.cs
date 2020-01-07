@@ -11,19 +11,11 @@ namespace MediaArchieve.Client.ViewModel
     public class MainWindowViewModel : BaseModel
     {
         public ObservableCollection<Folder> Folders { get; set; }
-        public ObservableCollection<Folder> EditingFolder { get; set; } 
-        public ICommand EditFolderCommand { get; set; } 
-
-        private void EditFolder(object obj)
-        {
-            EditingFolder = new ObservableCollection<Folder>();
-            EditingFolder.Add(Folders.FirstOrDefault());
-            OnPropertyChanged("EditFolderName");
-        }
-
+        public ObservableCollection<Item> Items { get; set; }
+        
         public MainWindowViewModel()
         {
-            EditFolderCommand = new RelayCommand(EditFolder);
+            
         }
         public async Task GetFolderCollection()
         {
@@ -33,6 +25,12 @@ namespace MediaArchieve.Client.ViewModel
             OnPropertyChanged("Folders");
         }
         
-        
+        public async Task GetItemCollection()
+        {
+            var itemsService = new ItemsService();
+            var collection = await itemsService.GetAllItems();
+            Items = new ObservableCollection<Item>(collection);
+            OnPropertyChanged("Items");
+        }
     }
 }

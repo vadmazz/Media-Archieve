@@ -10,7 +10,7 @@ namespace MediaArchieve.Client.Model.ServerSide
 {
     public class FoldersService
     {
-        private ArchieveClient _client = new ArchieveClient();
+        private readonly ArchieveClient _client = new ArchieveClient();
         /// <summary>
         /// Создает папку на сервере
         /// Возвращает true or false в зависимости от успешности выполнения

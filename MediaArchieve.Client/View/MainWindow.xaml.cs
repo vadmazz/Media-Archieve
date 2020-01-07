@@ -16,6 +16,7 @@ namespace MediaArchieve.Client.View
             DataContext = new MainWindowViewModel();
             var vm = DataContext as MainWindowViewModel;
             AsyncHelper.RunAsync(vm.GetFolderCollection);
+            AsyncHelper.RunAsync(vm.GetItemCollection);
         }
 
         private void ButtonPower_Click(object sender, RoutedEventArgs e)

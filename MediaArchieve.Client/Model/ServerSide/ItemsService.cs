@@ -25,7 +25,7 @@ namespace MediaArchieve.Client.Model.ServerSide
         /// </summary>
         public async Task<IEnumerable<Item>> GetAllItems()
         {
-            var response = await Get(ServerSettings.ItemUrl);
+            var response = await Get(ServerSettings.ItemUrl + "4/");//todo:fix
             if (!response.IsSuccessStatusCode)
                 throw new HttpRequestException();
             var itemJson = await response.Content.ReadAsStringAsync();
