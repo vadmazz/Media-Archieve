@@ -49,50 +49,85 @@
             </DockPanel>
         </md:TransitioningContent>
         <md:TransitioningContent Grid.Column="1" Grid.Row="1"  x:Name="TrainsitionigContentSlide3" OpeningEffect="{md:TransitionEffect SlideInFromBottom, Duration=0:0:0.4}">
-            <ListView ItemsSource="{Binding Items}" Style="{StaticResource LVItems}">
-                
-                <ListView.ItemContainerStyle>
-                    <Style TargetType="ListViewItem">
-                        <Setter Property="Template">
-                            <Setter.Value>
-                                <ControlTemplate>
-                                    <ListViewItem HorizontalContentAlignment="Stretch" Background="#448aff">
-                            <md:Card >
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="Auto" />
-                                        <ColumnDefinition Width="*" />
-                                        <ColumnDefinition Width="Auto" />
-                                    </Grid.ColumnDefinitions>
-                                    <md:Card Padding="15" HorizontalContentAlignment="Center">
-                                        <md:PackIcon Width="30" HorizontalAlignment="Center" Height="30" Kind="Audio" Foreground="Black" VerticalAlignment="Center"/>
-                                    </md:Card>
-                                    <Label Name="lb" Background="#82b1ff" Grid.Column="1" Content="{Binding Name}" FontSize="24" Foreground="White" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
-                                    <TextBox Name="tb" Background="#82b1ff" Grid.Column="1" Visibility="Collapsed" Text="{Binding Name}" FontSize="24" Foreground="White" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
-                                    <DockPanel Background="#82b1ff"  Grid.Column="2" HorizontalAlignment="Right">
-                                        <StackPanel  Name="ItemEditPanel" Visibility="Hidden" HorizontalAlignment="Right" Orientation="Horizontal">
-                                            <Button VerticalAlignment="Center" Foreground="DarkBlue" Margin="5 0">
-                                                <md:PackIcon Width="24"  Height="24" Kind="Edit"  VerticalAlignment="Center"/>
-                                            </Button>
-                                            <Button VerticalAlignment="Center" Foreground="DarkRed" Margin="5 0">
-                                                <md:PackIcon Width="24" Height="24" Kind="Delete"  VerticalAlignment="Center"/>
-                                            </Button>
-                                        </StackPanel>
-                                    </DockPanel>
-                                </Grid>
-                            </md:Card>
-                        </ListViewItem>
-                                    <ControlTemplate.Triggers>
-                                        <Trigger Property="IsMouseOver" Value="True">
-                                            <Setter TargetName="ItemEditPanel" Property="Visibility" Value="Visible"></Setter>
-                                        </Trigger>
-                                    </ControlTemplate.Triggers>
-                                </ControlTemplate>
-                            </Setter.Value>
-                        </Setter>
-                    </Style>
-                </ListView.ItemContainerStyle>
-            </ListView>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="3*"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <ListView ItemsSource="{Binding Items}" Style="{StaticResource LVItems}">
+
+                    <ListView.ItemContainerStyle>
+                        <Style TargetType="ListViewItem">
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate>
+                                        <ListViewItem HorizontalContentAlignment="Stretch" Background="#448aff">
+                                            <md:Card >
+                                                <Grid>
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="Auto" />
+                                                        <ColumnDefinition Width="*" />
+                                                        <ColumnDefinition Width="Auto" />
+                                                    </Grid.ColumnDefinitions>
+                                                    <md:Card Padding="15" HorizontalContentAlignment="Center">
+                                                        <md:PackIcon Width="30" HorizontalAlignment="Center" Height="30" Kind="Audio" Foreground="Black" VerticalAlignment="Center"/>
+                                                    </md:Card>
+                                                    <Label Name="lb" Background="#82b1ff" Grid.Column="1" Content="{Binding Name}" FontSize="24" Foreground="White" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+                                                    <TextBox Name="tb" Background="#82b1ff" Grid.Column="1" Visibility="Collapsed" Text="{Binding Name}" FontSize="24" Foreground="White" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+                                                    <DockPanel Background="#82b1ff"  Grid.Column="2" HorizontalAlignment="Right">
+                                                        <StackPanel  Name="ItemEditPanel" Visibility="Hidden" HorizontalAlignment="Right" Orientation="Horizontal">
+                                                            <Button VerticalAlignment="Center" Foreground="DarkBlue" Margin="5 0">
+                                                                <md:PackIcon Width="24"  Height="24" Kind="Edit"  VerticalAlignment="Center"/>
+                                                            </Button>
+                                                            <Button VerticalAlignment="Center" Foreground="DarkRed" Margin="5 0">
+                                                                <md:PackIcon Width="24" Height="24" Kind="Delete"  VerticalAlignment="Center"/>
+                                                            </Button>
+                                                        </StackPanel>
+                                                    </DockPanel>
+                                                </Grid>
+                                            </md:Card>
+                                        </ListViewItem>
+                                        <ControlTemplate.Triggers>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter TargetName="ItemEditPanel" Property="Visibility" Value="Visible"></Setter>
+                                            </Trigger>
+                                        </ControlTemplate.Triggers>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </ListView.ItemContainerStyle>
+                </ListView>
+                <md:Card Grid.Row="1">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="2*"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="5*" />
+                            </Grid.ColumnDefinitions>
+                            <md:PackIcon Kind="Audio" Foreground="Black" VerticalAlignment="Center" HorizontalAlignment="Center" Width="42" Height="42"/>
+                            <StackPanel Grid.Column="1">
+                                <TextBox Name="lb" Background="#82b1ff" Text="Name" FontSize="24" Foreground="White" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+                                <TextBox Background="#82b1ff" Text="Description" FontSize="20" Foreground="White" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+                            </StackPanel>
+                        </Grid>
+                        <Grid Grid.Row="2">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition />
+                                <ColumnDefinition />
+                            </Grid.ColumnDefinitions>
+                            <Button Background="Transparent">
+                                <md:PackIcon Kind="Check" Foreground="Black"/>
+                            </Button>
+                            <Button Grid.Column="1"></Button>
+                        </Grid>
+                    </Grid>
+                </md:Card>
+            </Grid>
             
         </md:TransitioningContent>
         <md:TransitioningContent  Grid.Column="1" Grid.Row="0"  x:Name="TrainsitionigContentSlide2" OpeningEffect="{md:TransitionEffect SlideInFromTop, Duration=0:0:0.4}">
