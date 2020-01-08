@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using System.Windows.Controls;
 using MaterialDesignThemes.Wpf;
 using MediaArchieve.Client.ViewModel;
 using MediaArchieve.Client.Helpers;
@@ -23,10 +24,10 @@ namespace MediaArchieve.Client.View
         {
             Application.Current.Shutdown();
         }
-
-        private void Sample5_DialogHost_OnDialogClosing(object sender, DialogClosingEventArgs eventargs)
+        private void Selector_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            throw new System.NotImplementedException();
+            var vm = DataContext as MainWindowViewModel;
+            vm.EditWindowCommand.Execute(null);
         }
     }
 }
