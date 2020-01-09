@@ -6,18 +6,20 @@ using Newtonsoft.Json;
 
 namespace MediaArchieve.Client.Model.ServerSide
 {
-    public class ItemsService : ArchieveClient
+    public class ItemsService
     {
+        private readonly ArchieveClient _client = new ArchieveClient();
         /// <summary>
-        /// Возвращает true or false в зависимости от того создался ли источник
+        /// Создает источник на сервере
         /// </summary>
-        public async Task<bool> CreateItem(Item item)
+        public async Task CreateItem(Item item)
         {
             var itemJson = JsonConvert.SerializeObject(item,
                 new JsonSerializerSettings {TypeNameHandling = TypeNameHandling.All});
-            var response = await Post(itemJson, ServerSettings.ItemUrl);
+            var response = await _client.Post(itemJson, ServerSettings.ItemUrl);
             
-            return response.IsSuccessStatusCode;
+            if (!response.IsSuccessStatusCode)
+                throw new HttpRequestException();
         }
         
         /// <summary>
@@ -25,7 +27,7 @@ namespace MediaArchieve.Client.Model.ServerSide
         /// </summary>
         public async Task<IEnumerable<Item>> GetAllItems()
         {
-            var response = await Get(ServerSettings.ItemUrl + "4/");//todo:fix
+            var response = await _client.Get(ServerSettings.ItemUrl + "4/");//todo:fix
             if (!response.IsSuccessStatusCode)
                 throw new HttpRequestException();
             var itemJson = await response.Content.ReadAsStringAsync();
@@ -35,6 +37,32 @@ namespace MediaArchieve.Client.Model.ServerSide
             return item as IEnumerable<Item>;
         }
         
-        //todo:UPDATE, DELETE 
+        /// <summary>
+        /// Обновляет источник на сервере
+        /// </summary>
+        public async Task UpdateItem(Item item)
+        {
+            var itemJson = JsonConvert.SerializeObject(item,
+                new JsonSerializerSettings {TypeNameHandling = TypeNameHandling.All});
+            var response = await _client.Put(itemJson, ServerSettings.ItemUrl);
+            if (!response.IsSuccessStatusCode)
+                throw new HttpRequestException();
+        }
+        
+        /// <summary>
+        /// Удаляет источник с сервера
+        /// Возвращает удаленный объект
+        /// </summary>
+        public async Task<Item> DeleteItem(Item item)
+        {
+            var response = await _client.Delete(item.Id, ServerSettings.ItemUrl);
+            if (!response.IsSuccessStatusCode)
+                throw new HttpRequestException();
+            var itemJson = await response.Content.ReadAsStringAsync();
+            var obj = JsonConvert.DeserializeObject(itemJson,
+                new JsonSerializerSettings{TypeNameHandling = TypeNameHandling.All});
+            
+            return item as Item;
+        }
     }
 }
