@@ -8,15 +8,23 @@ namespace MediaArchieve.Client.Model.ServerSide
     {
         private HttpClient _client = new HttpClient();
 
-        public async Task<HttpResponseMessage> Post(string obj, string url)
+        public async Task<HttpResponseMessage> Post(string json, string url)
         {
-            var content = new StringContent(obj, Encoding.UTF8, "application/json");
+            var content = new StringContent(json, Encoding.UTF8, "application/json");
             return await _client.PostAsync(url, content);
         }
 
-        public async Task<HttpResponseMessage> Get(string url)
+        public async Task<HttpResponseMessage> Get(string url) =>
+            await _client.GetAsync(url);
+        
+
+        public async Task<HttpResponseMessage> Put(string json, string url)
         {
-            return await _client.GetAsync(url);
-        }
+            var content = new StringContent(json, Encoding.UTF8, "application/json");
+            return await _client.PutAsync(url, content);
+        } 
+        
+        public async Task<HttpResponseMessage> Delete(string url) =>
+            await _client.DeleteAsync(url);
     }
 }
