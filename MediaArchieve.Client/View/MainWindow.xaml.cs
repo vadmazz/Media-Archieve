@@ -27,7 +27,8 @@ namespace MediaArchieve.Client.View
         private void Selector_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             var vm = DataContext as MainWindowViewModel;
-            vm.EditWindowCommand.Execute(null);
+            //vm.EditWindowCommand.Execute(null);
+            
         }
     }
 }

@@ -6,8 +6,18 @@
         xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
         xmlns:local="clr-namespace:MediaArchieve.Client.View"
         xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+        xmlns:viewModel="clr-namespace:MediaArchieve.Client.ViewModel"
+        xmlns:helpers="clr-namespace:MediaArchieve.Client.Helpers"
         mc:Ignorable="d"
         Title="MainWindow" MinHeight="500" MinWidth="900" Height="550" Width="1000" WindowStyle="None" WindowStartupLocation="CenterScreen">
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignColors;component/Themes/Recommended/Primary/MaterialDesignColor.Blue.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+            <FrameworkElement x:Key="ProxyElement" DataContext="{Binding}" />
+        </ResourceDictionary>
+    </Window.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
@@ -28,7 +38,7 @@
                     <Button Command="{Binding EditFolderCommand}" Width="42" HorizontalAlignment="Left" Height="42" Padding="0" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="White">
                         <md:PackIcon Kind="menu" Height="32" Width="32"/>
                     </Button>
-                    <ListView Grid.Row="1" ItemsSource="{Binding Folders}">
+                    <ListView Grid.Row="1" ItemsSource="{Binding Folders}" SelectedItem="{Binding SelectedFolder}">
                         <ListView.ItemTemplate>
                             <DataTemplate>
                                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch" Margin="0 10">
@@ -54,8 +64,8 @@
                     <RowDefinition Height="3*"/>
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
-                <ListView ItemsSource="{Binding Items}" Style="{StaticResource LVItems}" SelectionChanged="Selector_OnSelectionChanged">
-
+                <ContentControl Content="{StaticResource ProxyElement}" Visibility="Collapsed" />
+                <ListView x:Name="ItemsListView" ItemsSource="{Binding Items}" SelectionChanged="Selector_OnSelectionChanged" Style="{StaticResource LVItems}">
                     <ListView.ItemContainerStyle>
                         <Style TargetType="ListViewItem">
                             <Setter Property="Template">
@@ -75,11 +85,12 @@
                                                     <Label Name="lb" Background="#82b1ff" Grid.Column="1" Content="{Binding Name}" FontSize="24" Foreground="White" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
                                                     <DockPanel Background="#82b1ff"  Grid.Column="2" HorizontalAlignment="Right">
                                                         <StackPanel  Name="ItemEditPanel" Visibility="Hidden" HorizontalAlignment="Right" Orientation="Horizontal">
-                                                            <Button VerticalAlignment="Center" Foreground="DarkBlue" Command="{Binding CurrentViewModel}" Margin="5 0">
+                                                            <Button VerticalAlignment="Center" Foreground="DarkBlue" Command="{Binding DataContext.EditWindowCommand,
+                                                                Source={StaticResource ProxyElement}}">
                                                                 <md:PackIcon Width="24"  Height="24" Kind="Edit"  VerticalAlignment="Center"/>
                                                             </Button>
                                                             <Button VerticalAlignment="Center" Foreground="DarkRed" Margin="5 0">
-                                                                <md:PackIcon Width="24" Height="24" Kind="Delete"  VerticalAlignment="Center"/>
+                                                                <md:PackIcon Width="24" Height="24" Kind="Delete" VerticalAlignment="Center"/>
                                                             </Button>
                                                         </StackPanel>
                                                     </DockPanel>
@@ -97,7 +108,7 @@
                         </Style>
                     </ListView.ItemContainerStyle>
                 </ListView>
-                <md:Card Grid.Row="1" Visibility="{Binding EditWindowVisibility}">
+                <md:Card Grid.Row="1" Visibility="{Binding EditWindowVisibility}" >
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="2*"/>
@@ -109,9 +120,9 @@
                                 <ColumnDefinition Width="5*" />
                             </Grid.ColumnDefinitions>
                             <md:PackIcon Kind="Audio" Foreground="Black" VerticalAlignment="Center" HorizontalAlignment="Center" Width="42" Height="42"/>
-                            <StackPanel Grid.Column="1">
-                                <TextBox Name="lb" Background="#82b1ff" Text="Name" FontSize="24" Foreground="White" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
-                                <TextBox Background="#82b1ff" Text="Description" FontSize="20" Foreground="White" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+                            <StackPanel Grid.Column="1" DataContext="{Binding SelectedFolder}">
+                                <TextBox Name="lb" Background="#82b1ff" Text="{Binding Name}" FontSize="24" Foreground="White" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+                                <TextBox Background="#82b1ff" Text="{Binding Description}" FontSize="20" Foreground="White" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
                             </StackPanel>
                         </Grid>
                         <Grid Grid.Row="2">
@@ -131,7 +142,7 @@
             </Grid>
             
         </md:TransitioningContent>
-        <md:TransitioningContent  Grid.Column="1" Grid.Row="0"  x:Name="TrainsitionigContentSlide2" OpeningEffect="{md:TransitionEffect SlideInFromTop, Duration=0:0:0.4}">
+        <md:TransitioningContent Grid.Column="1" Grid.Row="0" x:Name="TrainsitionigContentSlide2" OpeningEffect="{md:TransitionEffect SlideInFromTop, Duration=0:0:0.4}">
             <DockPanel Background="#e3f2fd">
                 <Grid>
                     <Grid.ColumnDefinitions>
@@ -164,15 +175,5 @@
                 </Grid>
             </DockPanel>
         </md:TransitioningContent>
-
     </Grid>
-
-    <Window.Resources>
-        <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="pack://application:,,,/MaterialDesignColors;component/Themes/Recommended/Primary/MaterialDesignColor.Blue.xaml"/>
-            </ResourceDictionary.MergedDictionaries>
-        </ResourceDictionary>
-    </Window.Resources>
-
 </Window>

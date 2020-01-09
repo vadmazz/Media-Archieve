@@ -25,9 +25,9 @@ namespace MediaArchieve.Client.Model.ServerSide
         /// <summary>
         /// Возвращает коллекцию всех источников
         /// </summary>
-        public async Task<IEnumerable<Item>> GetAllItems()
+        public async Task<IEnumerable<Item>> GetAllItems(int folderId)
         {
-            var response = await _client.Get(ServerSettings.ItemUrl + "4/");//todo:fix
+            var response = await _client.Get(ServerSettings.ItemUrl + folderId);//todo:fix
             if (!response.IsSuccessStatusCode)
                 throw new HttpRequestException();
             var itemJson = await response.Content.ReadAsStringAsync();
