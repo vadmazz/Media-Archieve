@@ -33,6 +33,8 @@ namespace MediaArchieve.Client.View
             var vm = DataContext as MainWindowViewModel;
             vm.SelectedItem = (Item)(sender as ListViewItem).DataContext;
         }
+        
     }
 }
+
  

@@ -72,15 +72,15 @@
                         <ColumnDefinition/>
                         <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
-                    <Button  Background="Transparent" Grid.Column="0"  Height="Auto" Foreground="Green" Command="{Binding DataContext.EditWindowCommand,
+                    <Button Background="Transparent" Grid.Column="0" Height="Auto" Foreground="Green" Command="{Binding DataContext.AddItemCommand,
                                                                 Source={StaticResource ProxyElement}}">
                         <md:PackIcon Width="24" Height="24" Kind="Add" VerticalAlignment="Center"/>
                     </Button>
-                    <Button Background="Transparent" Height="Auto" Grid.Column="1" Command="{Binding DataContext.DeleteItemCommand,
+                    <Button Background="Transparent" Height="Auto" Grid.Column="1" Command="{Binding DataContext.RefreshItemsCommand,
                                                                 Source={StaticResource ProxyElement}}" Foreground="Blue" Margin="5 0">
                         <md:PackIcon Width="24" Height="24" Kind="Refresh" VerticalAlignment="Center"/>
                     </Button>
-                    <Button Background="Transparent" Height="Auto" Grid.Column="2" Command="{Binding DataContext.DeleteItemCommand,
+                    <Button Background="Transparent" Height="Auto" Grid.Column="2" Command="{Binding DataContext.ClearItemsCommand,
                                                                 Source={StaticResource ProxyElement}}" Foreground="DarkRed" Margin="5 0">
                         <md:PackIcon Width="24" Height="24" Kind="Trash" VerticalAlignment="Center"/>
                     </Button>
