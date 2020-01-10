@@ -24,7 +24,7 @@ namespace MediaArchieve.Client.Model.ServerSide
             return await _client.PutAsync(url, content);
         } 
         
-        public async Task<HttpResponseMessage> Delete(int id, string url) =>
-            await _client.DeleteAsync(url+id);
+        public async Task<HttpResponseMessage> Delete(string url) =>
+            await _client.DeleteAsync(url);
     }
 }

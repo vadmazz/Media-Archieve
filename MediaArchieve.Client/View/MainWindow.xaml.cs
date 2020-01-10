@@ -1,8 +1,11 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using MaterialDesignThemes.Wpf;
 using MediaArchieve.Client.ViewModel;
 using MediaArchieve.Client.Helpers;
+using MediaArchieve.Shared;
+using MediaArchieve.Shared.Items;
 
 namespace MediaArchieve.Client.View
 {
@@ -24,11 +27,11 @@ namespace MediaArchieve.Client.View
         {
             Application.Current.Shutdown();
         }
-        private void Selector_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+
+        private void listView_Click(object sender, MouseButtonEventArgs e)
         {
             var vm = DataContext as MainWindowViewModel;
-            //vm.EditWindowCommand.Execute(null);
-            
+            vm.SelectedItem = (Item)(sender as ListViewItem).DataContext;
         }
     }
 }

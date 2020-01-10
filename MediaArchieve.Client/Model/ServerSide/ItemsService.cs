@@ -27,7 +27,7 @@ namespace MediaArchieve.Client.Model.ServerSide
         /// </summary>
         public async Task<IEnumerable<Item>> GetAllItems(int folderId)
         {
-            var response = await _client.Get(ServerSettings.ItemUrl + folderId);//todo:fix
+            var response = await _client.Get(ServerSettings.ItemUrl + folderId);
             if (!response.IsSuccessStatusCode)
                 throw new HttpRequestException();
             var itemJson = await response.Content.ReadAsStringAsync();
@@ -44,7 +44,7 @@ namespace MediaArchieve.Client.Model.ServerSide
         {
             var itemJson = JsonConvert.SerializeObject(item,
                 new JsonSerializerSettings {TypeNameHandling = TypeNameHandling.All});
-            var response = await _client.Put(itemJson, ServerSettings.ItemUrl);
+            var response = await _client.Put(itemJson, ServerSettings.ItemUrl+item.FolderId+"/"+item.Id);
             if (!response.IsSuccessStatusCode)
                 throw new HttpRequestException();
         }
@@ -55,7 +55,7 @@ namespace MediaArchieve.Client.Model.ServerSide
         /// </summary>
         public async Task<Item> DeleteItem(Item item)
         {
-            var response = await _client.Delete(item.Id, ServerSettings.ItemUrl);
+            var response = await _client.Delete(ServerSettings.ItemUrl+item.FolderId + "/" + item.Id);
             if (!response.IsSuccessStatusCode)
                 throw new HttpRequestException();
             var itemJson = await response.Content.ReadAsStringAsync();

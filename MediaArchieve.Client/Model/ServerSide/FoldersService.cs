@@ -41,7 +41,7 @@ namespace MediaArchieve.Client.Model.ServerSide
         /// </summary>
         public async Task<Folder> DeleteFolder(Folder folder)
         {
-            var response = await _client.Delete(folder.Id, ServerSettings.FolderUrl);
+            var response = await _client.Delete(ServerSettings.FolderUrl + folder.Id);
             if (!response.IsSuccessStatusCode)
                 throw new HttpRequestException();
             var folderJson = await response.Content.ReadAsStringAsync();

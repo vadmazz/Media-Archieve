@@ -61,17 +61,39 @@
         <md:TransitioningContent Grid.Column="1" Grid.Row="1"  x:Name="TrainsitionigContentSlide3" OpeningEffect="{md:TransitionEffect SlideInFromBottom, Duration=0:0:0.4}">
             <Grid>
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="3*"/>
-                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="2*"/>
+                    <RowDefinition Height="20*"/>
+                    <RowDefinition Height="5*"/>
                 </Grid.RowDefinitions>
+
+                <Grid Margin="0 5 0 0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <Button  Background="Transparent" Grid.Column="0"  Height="Auto" Foreground="Green" Command="{Binding DataContext.EditWindowCommand,
+                                                                Source={StaticResource ProxyElement}}">
+                        <md:PackIcon Width="24" Height="24" Kind="Add" VerticalAlignment="Center"/>
+                    </Button>
+                    <Button Background="Transparent" Height="Auto" Grid.Column="1" Command="{Binding DataContext.DeleteItemCommand,
+                                                                Source={StaticResource ProxyElement}}" Foreground="Blue" Margin="5 0">
+                        <md:PackIcon Width="24" Height="24" Kind="Refresh" VerticalAlignment="Center"/>
+                    </Button>
+                    <Button Background="Transparent" Height="Auto" Grid.Column="2" Command="{Binding DataContext.DeleteItemCommand,
+                                                                Source={StaticResource ProxyElement}}" Foreground="DarkRed" Margin="5 0">
+                        <md:PackIcon Width="24" Height="24" Kind="Trash" VerticalAlignment="Center"/>
+                    </Button>
+                    
+                </Grid>
                 <ContentControl Content="{StaticResource ProxyElement}" Visibility="Collapsed" />
-                <ListView x:Name="ItemsListView" ItemsSource="{Binding Items}" SelectionChanged="Selector_OnSelectionChanged" Style="{StaticResource LVItems}">
+                <ListView Margin="0 5" Grid.Row="1" x:Name="ItemsListView" ItemsSource="{Binding Items}">
                     <ListView.ItemContainerStyle>
                         <Style TargetType="ListViewItem">
                             <Setter Property="Template">
                                 <Setter.Value>
                                     <ControlTemplate>
-                                        <ListViewItem HorizontalContentAlignment="Stretch" Background="#448aff">
+                                        <ListViewItem PreviewMouseLeftButtonUp="listView_Click" HorizontalContentAlignment="Stretch" Background="#448aff">
                                             <md:Card >
                                                 <Grid>
                                                     <Grid.ColumnDefinitions>
@@ -79,9 +101,7 @@
                                                         <ColumnDefinition Width="*" />
                                                         <ColumnDefinition Width="Auto" />
                                                     </Grid.ColumnDefinitions>
-                                                    <md:Card Padding="15" HorizontalContentAlignment="Center">
-                                                        <md:PackIcon Width="30" HorizontalAlignment="Center" Height="30" Kind="Audio" Foreground="Black" VerticalAlignment="Center"/>
-                                                    </md:Card>
+                                                    <md:PackIcon Margin="15" Width="30" HorizontalAlignment="Center" Height="30" Kind="Audio" Foreground="Black" VerticalAlignment="Center"/>
                                                     <Label Name="lb" Background="#82b1ff" Grid.Column="1" Content="{Binding Name}" FontSize="24" Foreground="White" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
                                                     <DockPanel Background="#82b1ff"  Grid.Column="2" HorizontalAlignment="Right">
                                                         <StackPanel  Name="ItemEditPanel" Visibility="Hidden" HorizontalAlignment="Right" Orientation="Horizontal">
@@ -89,7 +109,8 @@
                                                                 Source={StaticResource ProxyElement}}">
                                                                 <md:PackIcon Width="24"  Height="24" Kind="Edit"  VerticalAlignment="Center"/>
                                                             </Button>
-                                                            <Button VerticalAlignment="Center" Foreground="DarkRed" Margin="5 0">
+                                                            <Button VerticalAlignment="Center" Command="{Binding DataContext.DeleteItemCommand,
+                                                                Source={StaticResource ProxyElement}}" Foreground="DarkRed" Margin="5 0">
                                                                 <md:PackIcon Width="24" Height="24" Kind="Delete" VerticalAlignment="Center"/>
                                                             </Button>
                                                         </StackPanel>
@@ -108,7 +129,7 @@
                         </Style>
                     </ListView.ItemContainerStyle>
                 </ListView>
-                <md:Card Grid.Row="1" Visibility="{Binding EditWindowVisibility}" >
+                <md:Card Grid.Row="2" Visibility="{Binding EditWindowVisibility}" >
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="2*"/>
@@ -120,7 +141,7 @@
                                 <ColumnDefinition Width="5*" />
                             </Grid.ColumnDefinitions>
                             <md:PackIcon Kind="Audio" Foreground="Black" VerticalAlignment="Center" HorizontalAlignment="Center" Width="42" Height="42"/>
-                            <StackPanel Grid.Column="1" DataContext="{Binding SelectedFolder}">
+                            <StackPanel Grid.Column="1" DataContext="{Binding SelectedItem}">
                                 <TextBox Name="lb" Background="#82b1ff" Text="{Binding Name}" FontSize="24" Foreground="White" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
                                 <TextBox Background="#82b1ff" Text="{Binding Description}" FontSize="20" Foreground="White" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
                             </StackPanel>
@@ -130,10 +151,10 @@
                                 <ColumnDefinition />
                                 <ColumnDefinition />
                             </Grid.ColumnDefinitions>
-                            <Button Background="Transparent">
+                            <Button Background="Transparent" Command="{Binding AcceptEditItemCommand}">
                                 <md:PackIcon Kind="Check" Foreground="Green"/>
                             </Button>
-                            <Button Grid.Column="1" Background="Transparent">
+                            <Button Grid.Column="1" Background="Transparent" Command="{Binding CancelEditItemCommand}">
                                 <md:PackIcon Kind="Denied" Foreground="Red"/>
                             </Button>
                         </Grid>
