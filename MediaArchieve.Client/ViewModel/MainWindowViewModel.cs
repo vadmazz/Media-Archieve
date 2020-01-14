@@ -1,4 +1,5 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
@@ -23,6 +24,12 @@ namespace MediaArchieve.Client.ViewModel
 
         public ObservableCollection<Item> Items { get; set; }
         public Visibility EditWindowVisibility { get; set; }
+        public Visibility EditLabelVisibility { get
+        {
+            if (EditFolderVisibility == Visibility.Collapsed) return Visibility.Visible;
+            else return Visibility.Collapsed;
+        } }
+        public Visibility EditFolderVisibility { get; set; }
         private Item _selectedItem;
 
         public Item SelectedItem
@@ -30,21 +37,24 @@ namespace MediaArchieve.Client.ViewModel
             get { return _selectedItem; }
             set { _selectedItem = value; OnPropertyChanged("SelectedItem"); }
         }
-        public ICommand CancelEditItemCommand { get; set; }
-        public ICommand AddItemCommand { get; set; }
-        public ICommand DeleteItemCommand { get; set; }
-        public ICommand RefreshItemsCommand { get; set; }
-        public ICommand ClearItemsCommand { get; set; }
-        public ICommand AcceptEditItemCommand { get; set; }
-        public ICommand EditWindowCommand { get; set; }
-        
+        public ICommand CancelEditItemCommand { get; }
+        public ICommand AddItemCommand { get; }
+        public ICommand DeleteItemCommand { get; }
+        public ICommand RefreshItemsCommand { get; }
+        public ICommand ClearItemsCommand { get; }
+        public ICommand AcceptEditItemCommand { get; }
+        public ICommand EditWindowCommand { get; }
+        public ICommand EditFolderCommand { get; }
         
         ItemsService _itemsService = new ItemsService();
         FoldersService _foldersService = new FoldersService();
+
         public MainWindowViewModel()
         {
             EditWindowVisibility  = Visibility.Collapsed;
-            EditWindowCommand     = new RelayCommand(EditWindow);
+            EditFolderVisibility  = Visibility.Collapsed;
+            EditWindowCommand     = new RelayCommand(ShowEditItemWindow);
+            EditFolderCommand     = new RelayCommand(ShowEditFolderWindow);
             DeleteItemCommand     = new RelayCommand(DeleteItem);
             CancelEditItemCommand = new RelayCommand(CancelEditItem);    
             AcceptEditItemCommand = new RelayCommand(AcceptEditItem);    
@@ -53,18 +63,42 @@ namespace MediaArchieve.Client.ViewModel
             ClearItemsCommand     = new RelayCommand(ClearItems);    
         }
 
+        private void ShowEditItemWindow(object n)
+        {
+            if (EditWindowVisibility == Visibility.Collapsed)
+                EditWindowVisibility = Visibility.Visible;
+            else
+                EditWindowVisibility = Visibility.Collapsed;
+            OnPropertyChanged("EditWindowVisibility");
+        }
+        private void ShowEditFolderWindow(object n)
+        {
+            if (EditFolderVisibility == Visibility.Collapsed)
+                EditFolderVisibility = Visibility.Visible;
+            else
+                EditFolderVisibility = Visibility.Collapsed;
+            OnPropertyChanged("EditFolderVisibility");
+            OnPropertyChanged("EditLabelVisibility");
+        }
         private async void ClearItems(object obj)
         {
             foreach (var item in Items)
                 await _itemsService.DeleteItem(item);
             await GetItemCollection();
         }
-
         private async void RefreshItems(object obj) =>
             await GetItemCollection();
 
-        private void AddItem(object obj)
+        private async void AddItem(object obj)
         {
+            if (_selectedFolder == null)
+                MessageBox.Show("Не выбрана папка");
+            else
+            {
+                var newItem = new Item {Name = "Новая папка", Description = "Добавьте описание"};
+                await _itemsService.CreateItem(newItem, _selectedFolder.Id);
+                await GetItemCollection();
+            }
             
         }
 
@@ -79,24 +113,23 @@ namespace MediaArchieve.Client.ViewModel
         {
             await GetItemCollection();
             SelectedItem = null;
-            EditWindowCommand.Execute(null);
+            ChangeVisibility(EditWindowVisibility);
         }
         
         private async void AcceptEditItem(object obj)
         {
             await _itemsService.UpdateItem(SelectedItem);
             SelectedItem = null;
-            EditWindowCommand.Execute(null);
+            ChangeVisibility(EditWindowVisibility);
             await GetItemCollection();
         }
 
-        private void EditWindow(object obj)
+        private void ChangeVisibility(Visibility visibility)
         {
-            if (EditWindowVisibility == Visibility.Collapsed)
-                EditWindowVisibility = Visibility.Visible;
+            if (visibility == Visibility.Collapsed)
+                visibility = Visibility.Visible;
             else
-                EditWindowVisibility = Visibility.Collapsed;
-            OnPropertyChanged("EditWindowVisibility");
+                visibility = Visibility.Collapsed;
         }
 
 
@@ -115,7 +148,6 @@ namespace MediaArchieve.Client.ViewModel
                 Items = new ObservableCollection<Item>(collection);
                 OnPropertyChanged("Items");    
             }
-            
         }
     }
 }

@@ -5,11 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
         xmlns:local="clr-namespace:MediaArchieve.Client.View"
-        xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
-        xmlns:viewModel="clr-namespace:MediaArchieve.Client.ViewModel"
-        xmlns:helpers="clr-namespace:MediaArchieve.Client.Helpers"
         mc:Ignorable="d"
-        Title="MainWindow" MinHeight="500" MinWidth="900" Height="550" Width="1000" WindowStyle="None" WindowStartupLocation="CenterScreen">
+        Title="MainWindow" MinHeight="500" MinWidth="900" Height="550" Width="1000" WindowStyle="None" SizeChanged="MainWindow_OnSizeChanged" WindowStartupLocation="CenterScreen">
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -28,25 +25,34 @@
             <RowDefinition Height="12*"/>
         </Grid.RowDefinitions>
         <md:TransitioningContent  Grid.RowSpan="2" x:Name="TrainsitionigContentSlide" OpeningEffect="{md:TransitionEffect SlideInFromLeft, Duration=0:0:0.4}">
-            <DockPanel Background="#1565c0">
+            <DockPanel Background="#1565c0" Name="LeftMenu">
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="*" />
                         <RowDefinition Height="8*" />
                         <RowDefinition Height="*" />
                     </Grid.RowDefinitions>
-                    <Button Command="{Binding EditFolderCommand}" Width="42" HorizontalAlignment="Left" Height="42" Padding="0" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="White">
-                        <md:PackIcon Kind="menu" Height="32" Width="32"/>
-                    </Button>
                     <ListView Grid.Row="1" ItemsSource="{Binding Folders}" SelectedItem="{Binding SelectedFolder}">
                         <ListView.ItemTemplate>
+                            
                             <DataTemplate>
                                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch" Margin="0 10">
                                     <md:PackIcon Width="24" HorizontalAlignment="Left" Height="24" Margin="10 0" Kind="Folder" Foreground="White" VerticalAlignment="Center"/>
-                                    <Label Content="{Binding Name}" Padding="30 0 0 0" FontSize="18" Foreground="White" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"></Label>
+                                    <Label Content="{Binding Name}" Visibility="{Binding DataContext.EditLabelVisibility,
+                                                                Source={StaticResource ProxyElement}}" Padding="30 0 0 0" FontSize="18" Foreground="White" HorizontalContentAlignment="Center" VerticalContentAlignment="Center">
+                                    </Label>
+                                    <TextBox Text="{Binding Name}" Visibility="{Binding DataContext.EditFolderVisibility,
+                                                                Source={StaticResource ProxyElement}}" Padding="30 0 0 0" FontSize="18" Foreground="White" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+                                    
                                 </StackPanel>
                             </DataTemplate>
                         </ListView.ItemTemplate>
+                        <ListView.ContextMenu>
+                            <ContextMenu>
+                                <MenuItem Command="{Binding DataContext.EditFolderCommand,
+                                                                Source={StaticResource ProxyElement}}" Header="Edit"></MenuItem>    
+                            </ContextMenu>
+                        </ListView.ContextMenu>
                     </ListView>
                     <ListViewItem Grid.Row="2" Background="#0d47a1" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch">
                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
@@ -66,25 +72,24 @@
                     <RowDefinition Height="5*"/>
                 </Grid.RowDefinitions>
 
-                <Grid Margin="0 5 0 0">
+                <Grid Margin="5">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition/>
                         <ColumnDefinition/>
                         <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
                     <Button Background="Transparent" Grid.Column="0" Height="Auto" Foreground="Green" Command="{Binding DataContext.AddItemCommand,
-                                                                Source={StaticResource ProxyElement}}">
+                                                                Source={StaticResource ProxyElement}}" Margin="1 0">
                         <md:PackIcon Width="24" Height="24" Kind="Add" VerticalAlignment="Center"/>
                     </Button>
                     <Button Background="Transparent" Height="Auto" Grid.Column="1" Command="{Binding DataContext.RefreshItemsCommand,
-                                                                Source={StaticResource ProxyElement}}" Foreground="Blue" Margin="5 0">
+                                                                Source={StaticResource ProxyElement}}" Foreground="Blue" Margin="1 0">
                         <md:PackIcon Width="24" Height="24" Kind="Refresh" VerticalAlignment="Center"/>
                     </Button>
                     <Button Background="Transparent" Height="Auto" Grid.Column="2" Command="{Binding DataContext.ClearItemsCommand,
-                                                                Source={StaticResource ProxyElement}}" Foreground="DarkRed" Margin="5 0">
+                                                                Source={StaticResource ProxyElement}}" Foreground="DarkRed" Margin="1 0">
                         <md:PackIcon Width="24" Height="24" Kind="Trash" VerticalAlignment="Center"/>
                     </Button>
-                    
                 </Grid>
                 <ContentControl Content="{StaticResource ProxyElement}" Visibility="Collapsed" />
                 <ListView Margin="0 5" Grid.Row="1" x:Name="ItemsListView" ItemsSource="{Binding Items}">
@@ -129,7 +134,7 @@
                         </Style>
                     </ListView.ItemContainerStyle>
                 </ListView>
-                <md:Card Grid.Row="2" Visibility="{Binding EditWindowVisibility}" >
+                <md:Card Grid.Row="2" Visibility="{Binding EditWindowVisibility}">
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="2*"/>
@@ -137,8 +142,8 @@
                         </Grid.RowDefinitions>
                         <Grid>
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="5*" />
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="5*"/>
                             </Grid.ColumnDefinitions>
                             <md:PackIcon Kind="Audio" Foreground="Black" VerticalAlignment="Center" HorizontalAlignment="Center" Width="42" Height="42"/>
                             <StackPanel Grid.Column="1" DataContext="{Binding SelectedItem}">
@@ -146,7 +151,7 @@
                                 <TextBox Background="#82b1ff" Text="{Binding Description}" FontSize="20" Foreground="White" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
                             </StackPanel>
                         </Grid>
-                        <Grid Grid.Row="2">
+                        <Grid Grid.Row="1">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition />
                                 <ColumnDefinition />
@@ -179,19 +184,10 @@
                         </Button>
                     </StackPanel>
                     <StackPanel x:Name="ShutdownPanel" Grid.Column="1" VerticalAlignment="Top" HorizontalAlignment="Right" Orientation="Horizontal">
-                        <Button Width="30" x:Name="Maximize" Command="{Binding Source={x:Static SystemCommands.MaximizeWindowCommand}}" Height="30" Padding="0" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="Gray">
-                            <md:PackIcon Kind="WindowMaximize"/>
-                        </Button>
-                        <Button Width="30" x:Name="Restore" Command="{Binding Source={x:Static SystemCommands.RestoreWindowCommand}}"  Visibility="Collapsed" Height="30" Padding="0" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="Gray">
-                            <md:PackIcon Kind="WindowRestore"/>
-                        </Button>
-                        <Button Width="30" Height="30" Padding="0" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="Gray">
-                            <md:PackIcon Kind="WindowMinimize"/>
-                        </Button>
-                        <Button Width="30" Height="30" Padding="0" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="Gray"
-                            Click="ButtonPower_Click">
-                            <md:PackIcon Kind="Power"/>
-                        </Button>
+                        <Button Margin="1 1" Click="Maximize_OnClick" x:Name="Maximize" Style="{StaticResource MaximizeButton}"/>
+                        <Button Margin="1 1" Click="Restore_OnClick" x:Name="Restore" Visibility="Collapsed" Style="{StaticResource RestoreButton}"/>
+                        <Button Margin="1 1" Click="Minimize_OnClick" Style="{StaticResource MinimizeButton}"/>
+                        <Button Margin="1 1" Click="ButtonPower_Click" Style="{StaticResource PowerButton}" />
                     </StackPanel>
                 </Grid>
             </DockPanel>

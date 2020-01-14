@@ -1,0 +1,21 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes">
+    <Style TargetType="Button" x:Key="PowerButton">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Button Width="22" x:Name="PowerButton" Height="22" Padding="0" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="Gray"
+                    >
+                        <materialDesign:PackIcon Width="20" Height="20" Kind="Power"/>
+                    </Button>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="PowerButton" Property="Foreground" Value="DarkRed"></Setter>
+                        </Trigger>
+                    </ControlTemplate.Triggers>    
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+</ResourceDictionary>

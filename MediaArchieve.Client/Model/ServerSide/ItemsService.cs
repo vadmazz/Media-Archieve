@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
 using MediaArchieve.Shared;
@@ -12,11 +13,11 @@ namespace MediaArchieve.Client.Model.ServerSide
         /// <summary>
         /// Создает источник на сервере
         /// </summary>
-        public async Task CreateItem(Item item)
+        public async Task CreateItem(Item item, int folderId)
         {
             var itemJson = JsonConvert.SerializeObject(item,
                 new JsonSerializerSettings {TypeNameHandling = TypeNameHandling.All});
-            var response = await _client.Post(itemJson, ServerSettings.ItemUrl);
+            var response = await _client.Post(itemJson, ServerSettings.ItemUrl+folderId);
             
             if (!response.IsSuccessStatusCode)
                 throw new HttpRequestException();
@@ -46,7 +47,8 @@ namespace MediaArchieve.Client.Model.ServerSide
                 new JsonSerializerSettings {TypeNameHandling = TypeNameHandling.All});
             var response = await _client.Put(itemJson, ServerSettings.ItemUrl+item.FolderId+"/"+item.Id);
             if (!response.IsSuccessStatusCode)
-                throw new HttpRequestException();
+                throw new 
+                    Exception(response.ToString());
         }
         
         /// <summary>
