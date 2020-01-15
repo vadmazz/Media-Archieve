@@ -34,7 +34,6 @@
                     </Grid.RowDefinitions>
                     <ListView Grid.Row="1" ItemsSource="{Binding Folders}" SelectedItem="{Binding SelectedFolder}">
                         <ListView.ItemTemplate>
-                            
                             <DataTemplate>
                                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch" Margin="0 10">
                                     <md:PackIcon Width="24" HorizontalAlignment="Left" Height="24" Margin="10 0" Kind="Folder" Foreground="White" VerticalAlignment="Center"/>
@@ -43,14 +42,16 @@
                                     </Label>
                                     <TextBox Text="{Binding Name}" Visibility="{Binding DataContext.EditFolderVisibility,
                                                                 Source={StaticResource ProxyElement}}" Padding="30 0 0 0" FontSize="18" Foreground="White" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
-                                    
                                 </StackPanel>
                             </DataTemplate>
                         </ListView.ItemTemplate>
                         <ListView.ContextMenu>
                             <ContextMenu>
-                                <MenuItem Command="{Binding DataContext.EditFolderCommand,
-                                                                Source={StaticResource ProxyElement}}" Header="Edit"></MenuItem>    
+                                <MenuItem Visibility="{Binding DataContext.EditLabelVisibility,
+                                                                Source={StaticResource ProxyElement}}" Command="{Binding DataContext.EditFolderCommand,
+                                                                Source={StaticResource ProxyElement}}" Header="Edit" />    
+                                <MenuItem Visibility="{Binding DataContext.EditFolderVisibility,
+                                                                Source={StaticResource ProxyElement}}" Command="{Binding UpdateFolderCommand}" Header="Save" />    
                             </ContextMenu>
                         </ListView.ContextMenu>
                     </ListView>
@@ -71,26 +72,28 @@
                     <RowDefinition Height="20*"/>
                     <RowDefinition Height="5*"/>
                 </Grid.RowDefinitions>
-
-                <Grid Margin="5">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition/>
-                        <ColumnDefinition/>
-                        <ColumnDefinition/>
-                    </Grid.ColumnDefinitions>
-                    <Button Background="Transparent" Grid.Column="0" Height="Auto" Foreground="Green" Command="{Binding DataContext.AddItemCommand,
-                                                                Source={StaticResource ProxyElement}}" Margin="1 0">
-                        <md:PackIcon Width="24" Height="24" Kind="Add" VerticalAlignment="Center"/>
-                    </Button>
-                    <Button Background="Transparent" Height="Auto" Grid.Column="1" Command="{Binding DataContext.RefreshItemsCommand,
-                                                                Source={StaticResource ProxyElement}}" Foreground="Blue" Margin="1 0">
-                        <md:PackIcon Width="24" Height="24" Kind="Refresh" VerticalAlignment="Center"/>
-                    </Button>
-                    <Button Background="Transparent" Height="Auto" Grid.Column="2" Command="{Binding DataContext.ClearItemsCommand,
-                                                                Source={StaticResource ProxyElement}}" Foreground="DarkRed" Margin="1 0">
-                        <md:PackIcon Width="24" Height="24" Kind="Trash" VerticalAlignment="Center"/>
-                    </Button>
-                </Grid>
+                <Menu >
+                    <MenuItem Header="Create Item" VerticalAlignment="Center">
+                            <MenuItem.Icon>
+                            <md:PackIcon Kind="Add" Foreground="DarkGreen"/>
+                            </MenuItem.Icon>
+                            <MenuItem Header="Document" Command="{Binding CreateItemCommand}" CommandParameter="Document"/>
+                            <MenuItem Header="Audio" Command="{Binding CreateItemCommand}" CommandParameter="Audio"/>
+                            <MenuItem Header="Photo" Command="{Binding CreateItemCommand}" CommandParameter="Photo"/>
+                            <MenuItem Header="Clip" Command="{Binding CreateItemCommand}" CommandParameter="Clip"/>
+                            <MenuItem Header="Film" Command="{Binding CreateItemCommand}" CommandParameter="Film"/>
+                        </MenuItem>
+                        <MenuItem Header="Update" VerticalAlignment="Center" Command="{Binding RefreshItemsCommand}">
+                            <MenuItem.Icon>
+                                <md:PackIcon Kind="Refresh" Foreground="DarkBlue"/>
+                            </MenuItem.Icon>
+                        </MenuItem>
+                        <MenuItem Header="Clear All" VerticalAlignment="Center" Command="{Binding ClearItemsCommand}">
+                            <MenuItem.Icon>
+                                <md:PackIcon Kind="Trash" Foreground="DarkRed"/>
+                            </MenuItem.Icon>
+                        </MenuItem>
+                    </Menu>
                 <ContentControl Content="{StaticResource ProxyElement}" Visibility="Collapsed" />
                 <ListView Margin="0 5" Grid.Row="1" x:Name="ItemsListView" ItemsSource="{Binding Items}">
                     <ListView.ItemContainerStyle>
@@ -106,7 +109,7 @@
                                                         <ColumnDefinition Width="*" />
                                                         <ColumnDefinition Width="Auto" />
                                                     </Grid.ColumnDefinitions>
-                                                    <md:PackIcon Margin="15" Width="30" HorizontalAlignment="Center" Height="30" Kind="Audio" Foreground="Black" VerticalAlignment="Center"/>
+                                                    <md:PackIcon Margin="15" Width="30" HorizontalAlignment="Center" Height="30" Kind="{Binding IconSource}" Foreground="Black" VerticalAlignment="Center"/>
                                                     <Label Name="lb" Background="#82b1ff" Grid.Column="1" Content="{Binding Name}" FontSize="24" Foreground="White" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
                                                     <DockPanel Background="#82b1ff"  Grid.Column="2" HorizontalAlignment="Right">
                                                         <StackPanel  Name="ItemEditPanel" Visibility="Hidden" HorizontalAlignment="Right" Orientation="Horizontal">
@@ -145,7 +148,7 @@
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="5*"/>
                             </Grid.ColumnDefinitions>
-                            <md:PackIcon Kind="Audio" Foreground="Black" VerticalAlignment="Center" HorizontalAlignment="Center" Width="42" Height="42"/>
+                            <md:PackIcon Kind="{Binding SelectedItem.IconSource}" Foreground="Black" VerticalAlignment="Center" HorizontalAlignment="Center" Width="42" Height="42"/>
                             <StackPanel Grid.Column="1" DataContext="{Binding SelectedItem}">
                                 <TextBox Name="lb" Background="#82b1ff" Text="{Binding Name}" FontSize="24" Foreground="White" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
                                 <TextBox Background="#82b1ff" Text="{Binding Description}" FontSize="20" Foreground="White" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
@@ -179,9 +182,7 @@
                         <TextBox VerticalAlignment="Center" Width="300"
                              md:HintAssist.Hint="Find something...">
                         </TextBox>
-                        <Button Width="30" Height="30" Padding="0" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="Gray">
-                            <md:PackIcon Kind="magnify"/>
-                        </Button>
+                        <Button Style="{StaticResource SearchButton}"/>
                     </StackPanel>
                     <StackPanel x:Name="ShutdownPanel" Grid.Column="1" VerticalAlignment="Top" HorizontalAlignment="Right" Orientation="Horizontal">
                         <Button Margin="1 1" Click="Maximize_OnClick" x:Name="Maximize" Style="{StaticResource MaximizeButton}"/>

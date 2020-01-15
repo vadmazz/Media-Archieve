@@ -9,6 +9,15 @@ namespace MediaArchieve.Shared.Items
     /// </summary>
     public class Photo : Item
     {
+        public Photo()
+        {
+            IconSource = "Image";
+        }
 
+        public Photo(string name, string description) 
+            : base(name, description)
+        {
+            IconSource = "Image";
+        }
     }
 }

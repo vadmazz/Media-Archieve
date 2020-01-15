@@ -7,6 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="View\Fonts\Roboto-Regular.ttf" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\MediaArchieve.Shared\MediaArchieve.Shared.csproj" />
   </ItemGroup>
 
@@ -19,6 +23,10 @@
     <PackageReference Include="MaterialDesignThemes" Version="3.1.0-ci930" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
     <PackageReference Include="System.Windows.Interactivity.WPF" Version="2.0.20525" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="View\Fonts\Roboto-Regular.ttf" />
   </ItemGroup>
 
 </Project>

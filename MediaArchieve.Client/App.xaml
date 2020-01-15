@@ -14,10 +14,10 @@
                 <ResourceDictionary Source="pack://application:,,,/View/Buttons/PowerButton.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/View/Buttons/MaximizeButton.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/View/Buttons/MinimizeButton.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/View/Buttons/MinimizeButton.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/View/Buttons/RestoreButton.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/View/Buttons/SearchButton.xaml" />
             </ResourceDictionary.MergedDictionaries>
-            
         </ResourceDictionary>
-        
     </Application.Resources>
 </Application>

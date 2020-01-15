@@ -7,13 +7,13 @@
     {
         public Document()
         {
-            IconSource = "C:\\Users\\vadim\\Downloads\\doc.png";
+            IconSource = "FileDocumentBoxOutline";
         }
 
         public Document(string name, string description) 
             : base(name, description)
         {
-            IconSource = "C:\\Users\\vadim\\Downloads\\doc.png";
+            IconSource = "FileDocumentBoxOutline";
         }
     }
 }

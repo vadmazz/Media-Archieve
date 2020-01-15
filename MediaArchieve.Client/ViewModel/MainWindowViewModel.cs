@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Collections.ObjectModel;
-using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using MediaArchieve.Client.Helpers;
+using MediaArchieve.Client.Model;
 using MediaArchieve.Client.Model.ServerSide;
 using MediaArchieve.Shared;
-using MediaArchieve.Shared.Items;
 
 namespace MediaArchieve.Client.ViewModel
 {
@@ -22,6 +21,7 @@ namespace MediaArchieve.Client.ViewModel
             set { _selectedFolder = value; OnPropertyChanged("SelectedFolder"); AsyncHelper.RunAsync(GetItemCollection);}
         }
 
+        public string Icon { get; set; } = "FileDocumentEdit";
         public ObservableCollection<Item> Items { get; set; }
         public Visibility EditWindowVisibility { get; set; }
         public Visibility EditLabelVisibility { get
@@ -38,16 +38,18 @@ namespace MediaArchieve.Client.ViewModel
             set { _selectedItem = value; OnPropertyChanged("SelectedItem"); }
         }
         public ICommand CancelEditItemCommand { get; }
-        public ICommand AddItemCommand { get; }
         public ICommand DeleteItemCommand { get; }
         public ICommand RefreshItemsCommand { get; }
         public ICommand ClearItemsCommand { get; }
         public ICommand AcceptEditItemCommand { get; }
         public ICommand EditWindowCommand { get; }
         public ICommand EditFolderCommand { get; }
+        public ICommand CreateItemCommand { get; set; }
+        public ICommand UpdateFolderCommand { get; }
         
         ItemsService _itemsService = new ItemsService();
         FoldersService _foldersService = new FoldersService();
+        ItemFactory _itemFactory = new ItemFactory();
 
         public MainWindowViewModel()
         {
@@ -58,9 +60,10 @@ namespace MediaArchieve.Client.ViewModel
             DeleteItemCommand     = new RelayCommand(DeleteItem);
             CancelEditItemCommand = new RelayCommand(CancelEditItem);    
             AcceptEditItemCommand = new RelayCommand(AcceptEditItem);    
-            AddItemCommand        = new RelayCommand(AddItem);    
+            CreateItemCommand     = new RelayCommand(CreateItem);
             RefreshItemsCommand   = new RelayCommand(RefreshItems);    
             ClearItemsCommand     = new RelayCommand(ClearItems);    
+            UpdateFolderCommand   = new RelayCommand(UpdateFolder);    
         }
 
         private void ShowEditItemWindow(object n)
@@ -80,6 +83,13 @@ namespace MediaArchieve.Client.ViewModel
             OnPropertyChanged("EditFolderVisibility");
             OnPropertyChanged("EditLabelVisibility");
         }
+
+        private async void UpdateFolder(object obj)
+        {
+            await _foldersService.UpdateFolder(SelectedFolder);
+            await GetFolderCollection();
+            ShowEditFolderWindow(null);
+        }
         private async void ClearItems(object obj)
         {
             foreach (var item in Items)
@@ -89,19 +99,21 @@ namespace MediaArchieve.Client.ViewModel
         private async void RefreshItems(object obj) =>
             await GetItemCollection();
 
-        private async void AddItem(object obj)
+        private async void CreateItem(object obj)
         {
+            var str = obj as String;
+            if (str == null)
+                throw new ArgumentException();
+            //преобразуем строку из параметра в ItemType
+            var item = _itemFactory.CreateItem((ItemType)Enum.Parse(typeof(ItemType), str));
             if (_selectedFolder == null)
                 MessageBox.Show("Не выбрана папка");
             else
             {
-                var newItem = new Item {Name = "Новая папка", Description = "Добавьте описание"};
-                await _itemsService.CreateItem(newItem, _selectedFolder.Id);
+                await _itemsService.CreateItem(item, _selectedFolder.Id);
                 await GetItemCollection();
             }
-            
         }
-
         private async void DeleteItem(object obj)
         {
             await _itemsService.DeleteItem(SelectedItem);
@@ -113,33 +125,23 @@ namespace MediaArchieve.Client.ViewModel
         {
             await GetItemCollection();
             SelectedItem = null;
-            ChangeVisibility(EditWindowVisibility);
+            ShowEditItemWindow(null);
         }
         
         private async void AcceptEditItem(object obj)
         {
             await _itemsService.UpdateItem(SelectedItem);
             SelectedItem = null;
-            ChangeVisibility(EditWindowVisibility);
             await GetItemCollection();
+            ShowEditItemWindow(null);
+
         }
-
-        private void ChangeVisibility(Visibility visibility)
-        {
-            if (visibility == Visibility.Collapsed)
-                visibility = Visibility.Visible;
-            else
-                visibility = Visibility.Collapsed;
-        }
-
-
         public async Task GetFolderCollection()
         {
             var collection = await _foldersService.GetAllFolders();
             Folders = new ObservableCollection<Folder>(collection);
             OnPropertyChanged("Folders");
         }
-        
         public async Task GetItemCollection()
         {
             if (_selectedFolder != null)

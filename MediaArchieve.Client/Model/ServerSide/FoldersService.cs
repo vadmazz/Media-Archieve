@@ -30,7 +30,7 @@ namespace MediaArchieve.Client.Model.ServerSide
         {
             var folderJson = JsonConvert.SerializeObject(folder,
                 new JsonSerializerSettings {TypeNameHandling = TypeNameHandling.All});
-            var response = await _client.Put(folderJson, ServerSettings.FolderUrl);
+            var response = await _client.Put(folderJson, ServerSettings.FolderUrl+folder.Id);
             if (!response.IsSuccessStatusCode)
                 throw new HttpRequestException();
         }

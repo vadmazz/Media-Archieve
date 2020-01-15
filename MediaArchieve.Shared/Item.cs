@@ -3,7 +3,7 @@
     public class Item
     {
         public int Id { get; set; }
-        public string IconSource { get; set; }
+        public string IconSource { get; set; } = "FileDocumentBoxOutline";
         public string Name { get; set; }
         public string Description { get; set; }
         
