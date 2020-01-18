@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
         xmlns:local="clr-namespace:MediaArchieve.Client.View"
+        xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
         mc:Ignorable="d"
         Title="MainWindow" MinHeight="500" MinWidth="900" Height="550" Width="1000" WindowStyle="None" SizeChanged="MainWindow_OnSizeChanged" WindowStartupLocation="CenterScreen">
     <Window.Resources>
@@ -60,9 +61,13 @@
                             <md:PackIcon Width="24" HorizontalAlignment="Left" Height="24" Kind="Settings" Foreground="White" VerticalAlignment="Center"/>
                             <Label Content="Settings" FontSize="18" Foreground="White" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
                         </StackPanel>
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="PreviewMouseLeftButtonDown">
+                                <i:InvokeCommandAction Command="{Binding ShowSettingsCommand}"/>
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
                     </ListViewItem>
                 </Grid>
-
             </DockPanel>
         </md:TransitioningContent>
         <md:TransitioningContent Grid.Column="1" Grid.Row="1"  x:Name="TrainsitionigContentSlide3" OpeningEffect="{md:TransitionEffect SlideInFromBottom, Duration=0:0:0.4}">

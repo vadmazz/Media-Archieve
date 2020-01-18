@@ -1,11 +1,9 @@
-﻿using System.Windows;
+﻿using System;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using MaterialDesignThemes.Wpf;
 using MediaArchieve.Client.ViewModel;
-using MediaArchieve.Client.Helpers;
 using MediaArchieve.Shared;
-using MediaArchieve.Shared.Items;
 
 namespace MediaArchieve.Client.View
 {
@@ -18,20 +16,15 @@ namespace MediaArchieve.Client.View
         {
             InitializeComponent();
             DataContext = new MainWindowViewModel();
-            var vm = DataContext as MainWindowViewModel;
-            AsyncHelper.RunAsync(vm.GetFolderCollection);
-            AsyncHelper.RunAsync(vm.GetItemCollection);
-            SettingsWindow w = new SettingsWindow();
-            w.Show();
         }
-
+        
         private void ButtonPower_Click(object sender, RoutedEventArgs e)
         {
-            Application.Current.Shutdown();
+            Environment.Exit(0);
         }
 
         private void listView_Click(object sender, MouseButtonEventArgs e)
-        {
+        {    
             var vm = DataContext as MainWindowViewModel;
             vm.SelectedItem = (Item)(sender as ListViewItem).DataContext;
         }

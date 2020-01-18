@@ -61,7 +61,7 @@ namespace MediaArchieve.Client.Model.ServerSide
                 throw new HttpRequestException();
             var folderJson = await response.Content.ReadAsStringAsync();
             var item = JsonConvert.DeserializeObject(folderJson,
-                new JsonSerializerSettings{TypeNameHandling = TypeNameHandling.All});
+                new JsonSerializerSettings {TypeNameHandling = TypeNameHandling.All});
 
             return item as IEnumerable<Folder>;
         }

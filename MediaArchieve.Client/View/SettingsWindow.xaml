@@ -22,8 +22,8 @@
         <DockPanel Background="#e0e0e0">
             <Label Content="Settings" FontSize="20" Margin="30 0 0 0" VerticalContentAlignment="Center" FontFamily="Roboto"/>
             <StackPanel x:Name="ShutdownPanel" Grid.Column="1" VerticalAlignment="Top" HorizontalAlignment="Right" Orientation="Horizontal">
-                <Button Margin="1 1" x:Name="Maximize" Style="{StaticResource MaximizeButton}"/>
-                <Button Margin="1 1" x:Name="Restore" Visibility="Collapsed" Style="{StaticResource RestoreButton}"/>
+                <Button Margin="1 1" Style="{StaticResource MaximizeButton}"/>
+                <Button Margin="1 1" Visibility="Collapsed" Style="{StaticResource RestoreButton}"/>
                 <Button Margin="1 1" Style="{StaticResource MinimizeButton}"/>
                 <Button Margin="1 1" Style="{StaticResource PowerButton}" />
             </StackPanel>
@@ -49,7 +49,7 @@
                                         <ColumnDefinition/>
                                         <ColumnDefinition/>
                                     </Grid.ColumnDefinitions>
-                                    <Label FontSize="20" Content="Port" />
+                                    <Label FontSize="20" Content="Host" />
                                     <TextBox Grid.Column="1" Margin="20 0" Width="100"/>
                                 </Grid>
                             </StackPanel>

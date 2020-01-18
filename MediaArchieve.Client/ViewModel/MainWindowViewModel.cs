@@ -6,6 +6,7 @@ using System.Windows.Input;
 using MediaArchieve.Client.Helpers;
 using MediaArchieve.Client.Model;
 using MediaArchieve.Client.Model.ServerSide;
+using MediaArchieve.Client.View;
 using MediaArchieve.Shared;
 
 namespace MediaArchieve.Client.ViewModel
@@ -20,8 +21,7 @@ namespace MediaArchieve.Client.ViewModel
             get { return _selectedFolder; }
             set { _selectedFolder = value; OnPropertyChanged("SelectedFolder"); AsyncHelper.RunAsync(GetItemCollection);}
         }
-
-        public string Icon { get; set; } = "FileDocumentEdit";
+        
         public ObservableCollection<Item> Items { get; set; }
         public Visibility EditWindowVisibility { get; set; }
         public Visibility EditLabelVisibility { get
@@ -46,6 +46,7 @@ namespace MediaArchieve.Client.ViewModel
         public ICommand EditFolderCommand { get; }
         public ICommand CreateItemCommand { get; set; }
         public ICommand UpdateFolderCommand { get; }
+        public ICommand ShowSettingsCommand { get; }
         
         ItemsService _itemsService = new ItemsService();
         FoldersService _foldersService = new FoldersService();
@@ -58,14 +59,37 @@ namespace MediaArchieve.Client.ViewModel
             EditWindowCommand     = new RelayCommand(ShowEditItemWindow);
             EditFolderCommand     = new RelayCommand(ShowEditFolderWindow);
             DeleteItemCommand     = new RelayCommand(DeleteItem);
-            CancelEditItemCommand = new RelayCommand(CancelEditItem);    
-            AcceptEditItemCommand = new RelayCommand(AcceptEditItem);    
+            CancelEditItemCommand = new RelayCommand(CancelEditItem);
+            AcceptEditItemCommand = new RelayCommand(AcceptEditItem);
             CreateItemCommand     = new RelayCommand(CreateItem);
-            RefreshItemsCommand   = new RelayCommand(RefreshItems);    
-            ClearItemsCommand     = new RelayCommand(ClearItems);    
-            UpdateFolderCommand   = new RelayCommand(UpdateFolder);    
+            RefreshItemsCommand   = new RelayCommand(RefreshItems);
+            ClearItemsCommand     = new RelayCommand(ClearItems);
+            UpdateFolderCommand   = new RelayCommand(UpdateFolder);
+            ShowSettingsCommand   = new RelayCommand(ShowSettings);
+            
+            SetConnection();
         }
+        private void SetConnection()
+        {
+            try
+            {
+                var connection = new ServerConnection();
+                connection.ContextChanged += RefreshItems;
+                GetFolderCollection();
+                GetItemCollection();
+            }
+            catch (InvalidConnectionException)
+            {
+                MessageBox.Show("Невозможно установить соединение с сервером!\n" +
+                                "Проверьте настройки сервера");
+            }
+        } 
 
+        private void ShowSettings(object n)
+        {
+            SettingsWindow w = new SettingsWindow();
+            w.Show();
+        }
         private void ShowEditItemWindow(object n)
         {
             if (EditWindowVisibility == Visibility.Collapsed)
@@ -96,8 +120,10 @@ namespace MediaArchieve.Client.ViewModel
                 await _itemsService.DeleteItem(item);
             await GetItemCollection();
         }
+
         private async void RefreshItems(object obj) =>
             await GetItemCollection();
+        
 
         private async void CreateItem(object obj)
         {
@@ -136,13 +162,13 @@ namespace MediaArchieve.Client.ViewModel
             ShowEditItemWindow(null);
 
         }
-        public async Task GetFolderCollection()
+        private async Task GetFolderCollection()
         {
             var collection = await _foldersService.GetAllFolders();
             Folders = new ObservableCollection<Folder>(collection);
             OnPropertyChanged("Folders");
         }
-        public async Task GetItemCollection()
+        private async Task GetItemCollection()
         {
             if (_selectedFolder != null)
             {
