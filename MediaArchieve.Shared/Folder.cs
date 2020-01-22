@@ -8,10 +8,10 @@ namespace MediaArchieve.Shared
         public string Name { get; set; }
         public ICollection<Item> Items { get; set; }
 
-        public void Update(Folder fo)
+        public void Update(Folder folder)
         {
-            Name = fo.Name;
-            Items = fo.Items;
+            Name = folder.Name;
+            Items = folder.Items;
         }
     }
 }

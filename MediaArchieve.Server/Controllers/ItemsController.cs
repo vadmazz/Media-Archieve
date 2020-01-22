@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using MediaArchieve.Server.Models;
 using MediaArchieve.Shared;
-using MediaArchieve.Shared.Items;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -44,7 +40,7 @@ namespace MediaArchieve.Server.Controllers
         /// url: .../api/items/folderId/
         /// </summary>
         [HttpGet("{id}")]
-        public ActionResult<IEnumerable<Item>> GetAll(int id)
+        public ActionResult<Item[]> GetAll(int id)//тоже костыль для кроссплатформенности
         {
             var folder = _context.Folders
                 .Include(x => x.Items)
@@ -52,7 +48,13 @@ namespace MediaArchieve.Server.Controllers
             if (folder == null)
                 return NotFound();
             
-            return folder.Items.ToList();
+            var l = folder.Items.ToList();
+            var res = new Item[l.Count];
+            for (int i = 0; i < l.Count; i++)
+            {
+                res[i] = l[i];
+            }
+            return res;
         }
         
         /// <summary>
@@ -120,6 +122,34 @@ namespace MediaArchieve.Server.Controllers
             _context.SaveChanges();
 
             return deletedItem;
+        }
+        
+        /// <summary>
+        /// Post
+        /// Возвращает коллекцию item которые имеют в названии
+        /// или описании совпадения со строкой query  
+        /// </summary>
+        [HttpPost]
+        public ActionResult<Item[]> FindByString([FromBody]string query)
+        {
+            if (string.IsNullOrEmpty(query))
+                return NotFound();
+            List<Item> allItems = new List<Item>();
+            foreach (var folder in _context.Folders.Include(x => x.Items))
+            {
+                foreach (var item in folder.Items)
+                {
+                    if (item.Name.Contains(query) || item.Description.Contains(query))
+                        allItems.Add(item);
+                }
+            }
+            var res = new Item[allItems.Count];
+            for (int i = 0; i < allItems.Count; i++)
+            {
+                res[i] = allItems[i];
+            }
+            
+            return res;
         }
     }
 }

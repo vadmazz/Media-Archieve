@@ -2,7 +2,6 @@
 using MediaArchieve.Shared;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
 using System.Linq;
 
 namespace MediaArchieve.Server.Controllers
@@ -23,9 +22,15 @@ namespace MediaArchieve.Server.Controllers
         /// url: .../api/folders/
         /// </summary>
         [HttpGet]
-        public ActionResult<IEnumerable<Folder>> Get()
+        public ActionResult<Folder[]> Get() // костыль для кроссплатформенности
         {
-            return _context.Folders.Include(x => x.Items).ToList();
+            var l = _context.Folders.Include(x => x.Items).ToList();
+            var res = new Folder[l.Count];
+            for (int i = 0; i < l.Count; i++)
+            {
+                res[i] = l[i];
+            }
+            return res;
         }
 
         /// <summary>

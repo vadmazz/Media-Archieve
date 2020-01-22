@@ -13,11 +13,16 @@ namespace MediaArchieve.Client.Model.ServerSide
 
         public ServerConnection()
         {
+           CheckConnection();
+           Thread thread = new Thread(Listen);
+           thread.Start();
+        }
+
+        public void CheckConnection()
+        {
             ArchieveClient a = new ArchieveClient();
             if (!a.CheckConnection())
                 throw new InvalidConnectionException();
-            Thread thread = new Thread(Listen);
-            thread.Start();
         }
 
         private void Listen()

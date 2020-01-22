@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
@@ -37,6 +39,8 @@ namespace MediaArchieve.Client.ViewModel
             get { return _selectedItem; }
             set { _selectedItem = value; OnPropertyChanged("SelectedItem"); }
         }
+
+        public string SearchText { get; set; }
         public ICommand CancelEditItemCommand { get; }
         public ICommand DeleteItemCommand { get; }
         public ICommand RefreshItemsCommand { get; }
@@ -47,11 +51,15 @@ namespace MediaArchieve.Client.ViewModel
         public ICommand CreateItemCommand { get; set; }
         public ICommand UpdateFolderCommand { get; }
         public ICommand ShowSettingsCommand { get; }
+        public ICommand SearchItemCommand { get; }
+        public ICommand CreateFolderCommand { get; }
+        public ICommand DeleteFolderCommand { get; }
         
         ItemsService _itemsService = new ItemsService();
         FoldersService _foldersService = new FoldersService();
         ItemFactory _itemFactory = new ItemFactory();
-
+        private ServerConnection _connection;
+        
         public MainWindowViewModel()
         {
             EditWindowVisibility  = Visibility.Collapsed;
@@ -66,15 +74,39 @@ namespace MediaArchieve.Client.ViewModel
             ClearItemsCommand     = new RelayCommand(ClearItems);
             UpdateFolderCommand   = new RelayCommand(UpdateFolder);
             ShowSettingsCommand   = new RelayCommand(ShowSettings);
+            SearchItemCommand     = new RelayCommand(SearchItem);
+            CreateFolderCommand   = new RelayCommand(CreateFolder);
+            DeleteFolderCommand   = new RelayCommand(DeleteFolder);
             
             SetConnection();
         }
+
+        private async void DeleteFolder(object obj)
+        {
+            await _foldersService.DeleteFolder(SelectedFolder);
+            await GetFolderCollection();
+        }
+
+        private async void CreateFolder(object obj)
+        {
+            await _foldersService.CreateFolder(new Folder { Name = "Новая папка"});
+            await GetFolderCollection();
+        }
+
+        private async void SearchItem(object obj)
+        {
+            var col = await _itemsService.FindByString(SearchText);
+            Items = new ObservableCollection<Item>(col);
+            OnPropertyChanged("Items");
+            SelectedFolder = null;
+        }
+
         private void SetConnection()
         {
             try
             {
-                var connection = new ServerConnection();
-                connection.ContextChanged += RefreshItems;
+                _connection = new ServerConnection();
+                _connection.ContextChanged += RefreshItems;
                 GetFolderCollection();
                 GetItemCollection();
             }
@@ -87,7 +119,7 @@ namespace MediaArchieve.Client.ViewModel
 
         private void ShowSettings(object n)
         {
-            SettingsWindow w = new SettingsWindow();
+            var w = new SettingsWindow(_connection);
             w.Show();
         }
         private void ShowEditItemWindow(object n)

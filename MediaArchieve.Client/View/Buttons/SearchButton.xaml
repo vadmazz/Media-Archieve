@@ -5,7 +5,7 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="Button">
-                    <Button Width="22" x:Name="SearchButton" Height="22" Padding="0" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="Gray">
+                    <Button Width="22" Command="{Binding SearchItemCommand}" x:Name="SearchButton" Height="22" Padding="0" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="Gray">
                         <materialDesign:PackIcon Width="20" Height="20" Kind="magnify"/>
                     </Button>
                     <ControlTemplate.Triggers>

@@ -52,7 +52,9 @@
                                                                 Source={StaticResource ProxyElement}}" Command="{Binding DataContext.EditFolderCommand,
                                                                 Source={StaticResource ProxyElement}}" Header="Edit" />    
                                 <MenuItem Visibility="{Binding DataContext.EditFolderVisibility,
-                                                                Source={StaticResource ProxyElement}}" Command="{Binding UpdateFolderCommand}" Header="Save" />    
+                                                                Source={StaticResource ProxyElement}}" Command="{Binding UpdateFolderCommand}" Header="Save" />
+                                <MenuItem Header="Create new folder" Command="{Binding CreateFolderCommand}"/>
+                                <MenuItem Header="Delete" Command="{Binding DeleteFolderCommand}"/>
                             </ContextMenu>
                         </ListView.ContextMenu>
                     </ListView>
@@ -184,10 +186,10 @@
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
                     <StackPanel x:Name="FindPanel" Orientation="Horizontal" Grid.Column="0" HorizontalAlignment="Center">
-                        <TextBox VerticalAlignment="Center" Width="300"
+                        <TextBox VerticalAlignment="Center" Width="300" Text="{Binding SearchText}"
                              md:HintAssist.Hint="Find something...">
                         </TextBox>
-                        <Button Style="{StaticResource SearchButton}"/>
+                        <Button Style="{StaticResource SearchButton}" Command="{Binding SearchItemCommand}"/>
                     </StackPanel>
                     <StackPanel x:Name="ShutdownPanel" Grid.Column="1" VerticalAlignment="Top" HorizontalAlignment="Right" Orientation="Horizontal">
                         <Button Margin="1 1" Click="Maximize_OnClick" x:Name="Maximize" Style="{StaticResource MaximizeButton}"/>

@@ -66,5 +66,15 @@ namespace MediaArchieve.Client.Model.ServerSide
             
             return item as Item;
         }
+
+        public async Task<IEnumerable<Item>> FindByString(string query)
+        {
+            var response = await _client.Post(JsonConvert.SerializeObject(query), ServerSettings.ItemUrl);
+            var itemJson = response.Content.ReadAsStringAsync().Result;
+            var item = JsonConvert.DeserializeObject(itemJson,
+                new JsonSerializerSettings{TypeNameHandling = TypeNameHandling.All});
+
+            return item as IEnumerable<Item>;
+        }
     }
 }

@@ -1,7 +1,4 @@
-﻿using System;
-using System.Net;
-using System.Net.Http;
-using System.Net.Sockets;
+﻿using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -31,20 +28,22 @@ namespace MediaArchieve.Client.Model.ServerSide
 
         public bool CheckConnection()
         {
-            IPAddress IP;
-            if (IPAddress.TryParse(ServerSettings.Host,out IP)){
-                Socket s = new Socket(AddressFamily.InterNetwork,
-                    SocketType.Stream,
-                    ProtocolType.Tcp);
-                try
-                {   
-                    s.Connect(ServerSettings.Host, ServerSettings.Port);
-                }
-                catch(Exception)
-                {
-                    return false;
-                }
-            }
+            // IPAddress IP;
+            // if (IPAddress.TryParse(ServerSettings.Host,out IP))
+            // {
+            //     Socket s = new Socket(AddressFamily.InterNetwork,
+            //         SocketType.Stream,
+            //         ProtocolType.Tcp);
+            //     try
+            //     {
+            //         s.Connect(ServerSettings.Host, ServerSettings.Port);
+            //     }
+            //     catch(Exception)
+            //     {
+            //         return false;
+            //     }
+            // }
+            //todo: сделать первоначальную проверку на соединение, настройки сервера
             return true;
         }
     }
